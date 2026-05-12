@@ -28,6 +28,7 @@ import {
   Trash2,
   Command
 } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import { DEMO_DATA as LOCAL_DEMO_DATA } from './constants';
 import { DemoItem, DemoSource, DemoStatus, DemoType } from './types';
 
@@ -864,6 +865,7 @@ export default function App() {
           Internal Use Only • CrOS Training & Enablement • Confidential
         </p>
       </footer>
+      <Analytics />
     </div>
   );
 }
