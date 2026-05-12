@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>[EXT] Training Resources Library</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              gray: {
+                850: '#1f2937',
+                900: '#131314', // Google Dark Background
+                950: '#0b0b0c',
+              },
+              google: {
+                blue: '#4285F4',
+                red: '#EA4335',
+                yellow: '#FBBC04',
+                green: '#34A853',
+              }
+            },
+            animation: {
+              'gradient-x': 'gradient-x 3s ease infinite',
+            },
+            keyframes: {
+              'gradient-x': {
+                '0%, 100%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'left center'
+                },
+                '50%': {
+                  'background-size': '200% 200%',
+                  'background-position': 'right center'
+                },
+              },
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      body {
+        background-color: #131314;
+        color: #E8EAED;
+      }
+      /* Custom Dark Scrollbar for Body */
+      ::-webkit-scrollbar {
+        width: 10px;
+        height: 10px;
+      }
+      ::-webkit-scrollbar-track {
+        background: #131314;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #3C4043;
+        border-radius: 5px;
+        border: 2px solid #131314;
+      }
+      ::-webkit-scrollbar-thumb:hover {
+        background: #5F6368;
+      }
+
+      /* Custom Scrollbar for Cards (thinner) */
+      .custom-scrollbar::-webkit-scrollbar {
+        width: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-track {
+        background: transparent;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb {
+        background: #374151;
+        border-radius: 4px;
+      }
+      .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+        background: #4B5563;
+      }
+
+      .gemini-gradient-text {
+        background: linear-gradient(to right, #8AB4F8, #C58AF9, #F885C2);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+      
+      /* Solid Card with Gradient Border on Hover */
+      .google-gradient-border {
+        position: relative;
+        background: #1E1F20;
+        border: 1px solid #374151; /* gray-700 default border */
+        transition: border-color 0.3s ease;
+      }
+      
+      .google-gradient-border:hover {
+        border-color: transparent; /* Hide default border on hover to show gradient */
+      }
+
+      .google-gradient-border::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2px; /* Thickness of gradient border */
+        background: linear-gradient(to right, #4285F4, #EA4335, #FBBC04, #34A853);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 25; /* Higher than overlay (20) but lower than nav (50) */
+      }
+      
+      .google-gradient-border:hover::after {
+        opacity: 1;
+      }
+
+      /* Hide scrollbar for carousel but keep functionality */
+      .no-scrollbar::-webkit-scrollbar {
+        display: none;
+      }
+      .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+      }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react/": "https://aistudiocdn.com/react@^19.2.1/",
+    "react": "https://aistudiocdn.com/react@^19.2.1",
+    "lucide-react": "https://aistudiocdn.com/lucide-react@^0.555.0",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.2.1/"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

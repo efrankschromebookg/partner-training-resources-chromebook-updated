@@ -1,0 +1,1062 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>[EXT] Training Resources Library</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind Config -->
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+            },
+            colors: {
+              gray: {
+                850: '#1f2937',
+                900: '#131314', // Google Dark Background
+                950: '#0b0b0c',
+              },
+              google: {
+                blue: '#4285F4',
+                red: '#EA4335',
+                yellow: '#FBBC04',
+                green: '#34A853',
+              }
+            }
+          }
+        }
+      }
+    </script>
+
+    <!-- Custom CSS -->
+    <style>
+      html, body {
+        margin: 0;
+        background-color: #131314;
+        color: #E8EAED;
+        font-family: 'Inter', sans-serif;
+        overflow-y: auto;
+      }
+      
+      #root {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+      
+      /* Scrollbars */
+      ::-webkit-scrollbar { width: 8px; height: 8px; }
+      ::-webkit-scrollbar-track { background: #131314; }
+      ::-webkit-scrollbar-thumb { background: #3C4043; border-radius: 4px; }
+      ::-webkit-scrollbar-thumb:hover { background: #5F6368; }
+
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Gradient Border CSS */
+      .google-gradient-border {
+        position: relative;
+        background: #1E1F20;
+        border: 1px solid #374151;
+        transition: border-color 0.3s ease;
+      }
+      .google-gradient-border:hover {
+        border-color: transparent;
+      }
+      .google-gradient-border::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 2px;
+        background: linear-gradient(to right, #4285F4, #EA4335, #FBBC04, #34A853);
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+        z-index: 25;
+      }
+      .google-gradient-border:hover::after {
+        opacity: 1;
+      }
+
+      /* Loading Animation */
+      .loading-pulse {
+        animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      }
+      @keyframes pulse {
+        0%, 100% { opacity: 1; }
+        50% { opacity: .5; }
+      }
+    </style>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <!-- Loading State -->
+    <div id="loading" style="position:fixed; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; background:#131314; z-index:100;">
+        <div class="loading-pulse" style="width: 48px; height: 48px; background: #4285F4; border-radius: 50%; margin-bottom: 16px;"></div>
+        <div style="color: #9CA3AF; font-size: 14px; font-weight: 500;">Loading Library...</div>
+    </div>
+
+    <!-- Error State -->
+    <div id="error-container" style="display:none; padding:20px; color:#EF4444; background:#1F2937; margin:20px; border-radius:8px; font-family: monospace; white-space: pre-wrap; position:relative; z-index:101;"></div>
+
+    <!-- App Root -->
+    <div id="root"></div>
+
+    <script>
+      // Global Error Trap
+      window.onerror = function(message, source, lineno, colno, error) {
+        console.error('Global Error:', message, 'at', source, ':', lineno, colno);
+        const loading = document.getElementById('loading');
+        const errContainer = document.getElementById('error-container');
+        if (loading) loading.style.display = 'none';
+        if (errContainer) {
+          errContainer.style.display = 'block';
+          errContainer.textContent = `Error: ${message}\nSource: ${source}\nLine: ${lineno}\nCol: ${colno}\nDetail: ${error?.stack || 'N/A'}`;
+        }
+      };
+    </script>
+
+    <script type="text/babel" data-type="module" crossorigin="anonymous">
+        import React, { useState, useMemo, useRef, useEffect } from 'https://esm.sh/react@18.3.1';
+        import ReactDOM from 'https://esm.sh/react-dom@18.3.1/client?deps=react@18.3.1';
+        import { 
+          Search, Filter, ExternalLink, Sparkles, Clock, PlayCircle, MonitorPlay, 
+          Presentation, FileText, AlertCircle, ChevronDown, ChevronRight, ChevronLeft, 
+          ChevronUp, LayoutGrid, List, Users, PenTool, BookOpen, Image, Languages, 
+          Video, Layout, ArrowRight, Zap, LayoutDashboard, Library, 
+          Calendar, Code, Wrench, Globe, Flame, Laptop
+        } from 'https://esm.sh/lucide-react@0.454.0?deps=react@18.3.1';
+
+        // --- 1. CONSTANTS ---
+        
+        const DemoSource = {
+          CHATBOT_PROJECT: 'Chatbot Project',
+          AI_EXPERIENCE: 'AI Experience Program',
+          DYK_SERIES: 'Did You Know Series',
+          EVENT_DEMOS: 'Event Demos',
+          MARKETING: 'Marketing & GTE',
+          OFFICIAL: 'Official Gemini Sources',
+        };
+
+        const DemoStatus = {
+          LIVE: 'Live',
+          IN_PRODUCTION: 'In Production',
+        };
+
+        const DemoType = {
+          GIF: 'Demo (GIF)',
+          INFOSHEET: 'Infosheet (PDF)',
+          DECK: 'Slide (PDF)',
+          VIDEO: 'Video (MP4)',
+          INTERACTIVE: 'eLearning (SCORM)',
+          WEBPAGE: 'Web Resource'
+        };
+
+        // --- 2. DATA ---
+        
+        const rawChatbotData = [
+          { t: "Gemini Agent: Infosheet", l: "https://drive.google.com/file/d/1Vrfl7dFMj6k0VQUkSAMqrXSBG8C_19hj/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "agent, agentic support, gemini", p: "", type: DemoType.INFOSHEET },
+          { t: "Gemini Agent: Video", l: "https://drive.google.com/file/d/1Q3H1fWzvQkj2ZGsC2LkHAzZY_oTBd60p/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "agent, agentic support, gemini", p: "Everyday user", type: DemoType.VIDEO },
+          { t: "Gemini Gems: Infosheet", l: "https://drive.google.com/file/d/1HgUO0ywQgTKGEv40ONPrNKiF12WGsi_h/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gems, custom gem, creation, gemini", p: "Everyday user", type: DemoType.INFOSHEET },
+          { t: "Gemini Gems: Video", l: "https://drive.google.com/file/d/1s--Kiuqe9ErNNSwDth9JbIZxZmtS-H2j/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gems, custom gem, creation, gemini", p: "Everyday user", type: DemoType.VIDEO },
+          { t: "Nano Banana & Veo: Infosheet", l: "https://drive.google.com/file/d/17T41i7XDPxgmkGX8BV-ubtd28Pz5EMMt/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "nano banana, veo, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.INFOSHEET },
+          { t: "Nano Banana & Veo: Video", l: "https://drive.google.com/file/d/14uiuROn1Xsyz36CySa48e2_1dkK1sudW/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "nano banana, veo, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.VIDEO },
+          { t: "Deep Research: Infosheet", l: "https://drive.google.com/file/d/14dOvx8J5hrrihvDZHUiML_1hbKJvJ2jm/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "deep research, learning, gemini", p: "Everyday user", type: DemoType.INFOSHEET },
+          { t: "Canvas: Infosheet", l: "https://drive.google.com/file/d/18kMYciYx1bypGyHua24VtcKWSNGzHGS_/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini, canvas, design, visual", p: "Everyday user", type: DemoType.INFOSHEET },
+          { t: "Deep Research & Canvas: Video", l: "https://drive.google.com/file/d/1BeVq48oxNmSSMV0UXlqYlBugrKRRc1-K/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini, canvas, design, visual, deep research, learning", p: "Everyday user", type: DemoType.VIDEO },
+          { t: "NotebookLM Audio & Video Overview: Video", l: "https://drive.google.com/file/d/19L5PWHON_pl5W7Fspvv3F2F95jiDHfmD/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "notebooklm, learning, productivity, video, audio, overview", p: "", type: DemoType.VIDEO },
+          { t: "NotebookLM Audio & Video Overview: Infosheet", l: "https://drive.google.com/file/d/1jU-ssm4VbZTDSqTo8y3YBwp4flxM-9Jt/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "notebooklm, learning, productivity, video, audio, overview", p: "", type: DemoType.INFOSHEET },
+          { t: "Gemini on ChromeOS: Infosheet", l: "https://drive.google.com/file/d/1qRIu0Md0LKw87Z_eZIw7oPprBbP3lPB7/view?usp=sharing", d: "Overview of Gemini features and integration on ChromeOS.", tags: "Gemini, foundation, introduction, demos, integration, Workspace tools", p: "General", type: DemoType.INFOSHEET },
+          { t: "Gemini Sidebar in Chrome", l: "https://drive.google.com/file/d/1kH2RETW6jvtuFcdpcHUG5uaCATeQ5n-h/view?usp=sharing", d: "Demo showing the Gemini sidebar experience on Chromebook Plus.", tags: "gemini tools, sidebar, gemini in chrome, chrome browser, agent, agentic support", p: "General", type: DemoType.INFOSHEET },
+          { t: "Basics of Chromebook eLearning", l: "https://drive.google.com/file/d/1vqxuEP86YfPGeYdyyCt9OmtfSfqvICeg/view?usp=sharing", d: "15 minute foundational eLearning for baseline Chromebook knowledge. Partners without an eLearning platform can view the module through the Articulate web player link: https://share.articulate.com/s7w053UVQ07i08mKhOGHn", tags: "foundations, chromebook, chromebook plus, chromeOS, introduction", p: "General", type: DemoType.INTERACTIVE },
+          { t: "The Value of ChromeOS", l: "https://drive.google.com/file/d/1l4U5fijAeRYGzms1h_ywAtjmBmx4Gg_u/view?usp=sharing", d: "A video overview highlighting the core value proposition and benefits of ChromeOS.", tags: "foundations, chromebook, chromeOS, perks, offers, value", p: "General", type: DemoType.VIDEO },
+          { t: "What's New with NotebookLM eModule (Spring '26)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view?usp=drive_link", d: "Interactive eLearning module covering the latest updates to NotebookLM.", tags: "notebooklm, learning, productivity, video, audio, overview, infographics, mind map, slide output, sources", p: "Internal", type: DemoType.INTERACTIVE },
+          { t: "Google Brand Familiarity", l: "https://drive.google.com/file/d/1jrd8I0U0ZcjKSC37wHUCEMqYdv2UcOPn/view?usp=sharing", d: "A guide to understanding Google's brand ecosystem and workspace familiarity.", tags: "google workspace, youtube, gmail, photos, android, ecosystem, beto, better together", p: "General", type: DemoType.VIDEO },
+          { t: "Better Together with Gemini", l: "https://drive.google.com/file/d/1gtjxJ-dFpJv0nZxqSob-G_mKsT5NE0dh/view?usp=sharing", d: "Explore hardware interoperability and how devices work better together with Gemini.", tags: "hardware, interoperability, gemini, better together, beto, ecosystem", p: "General", type: DemoType.INFOSHEET },
+          { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK }
+        ];
+
+
+        // --- 3. HELPER FUNCTIONS ---
+
+        const getTypeIcon = (type) => {
+          switch (type) {
+            case DemoType.GIF:
+              return (
+                <div className="flex flex-col items-center gap-0.5">
+                  <PlayCircle className="w-4 h-4 text-google-blue" />
+                  <span className="text-[8px] font-bold text-google-blue uppercase leading-none">Demo</span>
+                </div>
+              );
+            case DemoType.INFOSHEET:
+              return (
+                <div className="flex flex-col items-center gap-0.5">
+                  <FileText className="w-4 h-4 text-google-green" />
+                  <span className="text-[8px] font-bold text-google-green uppercase leading-none">Infosheet</span>
+                </div>
+              );
+            case DemoType.DECK:
+              return (
+                <div className="flex flex-col items-center gap-0.5">
+                  <Presentation className="w-4 h-4 text-google-green" />
+                  <span className="text-[8px] font-bold text-google-green uppercase leading-none">Slides</span>
+                </div>
+              );
+            case DemoType.VIDEO:
+              return (
+                <div className="flex flex-col items-center gap-0.5">
+                  <PlayCircle className="w-4 h-4 text-google-green" />
+                  <span className="text-[8px] font-bold text-google-green uppercase leading-none">Video</span>
+                </div>
+              );
+            case DemoType.INTERACTIVE:
+              return (
+                <div className="flex flex-col items-center gap-0.5">
+                  <MonitorPlay className="w-4 h-4 text-google-green" />
+                  <span className="text-[8px] font-bold text-google-green uppercase leading-none">eLearning</span>
+                </div>
+              );
+            case DemoType.WEBPAGE:
+              return (
+                <div className="flex flex-col items-center gap-0.5">
+                  <Globe className="w-4 h-4 text-google-blue" />
+                  <span className="text-[8px] font-bold text-google-blue uppercase leading-none">Web</span>
+                </div>
+              );
+            default: return <FileText className="w-4 h-4 text-gray-400" />;
+          }
+        };
+
+        const getFormatLabel = (type) => {
+          switch (type) {
+            case DemoType.GIF: return 'GIF';
+            case DemoType.INFOSHEET:
+            case DemoType.DECK: return 'PDF';
+            case DemoType.VIDEO: return 'MP4';
+            case DemoType.INTERACTIVE: return 'SCORM';
+            default: return 'WEB';
+          }
+        };
+
+        const toTitleCase = (str) => {
+          let formatted = str.replace(/\w\S*/g, (txt) => {
+            return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+          });
+          formatted = formatted
+            .replace(/Gemini/gi, 'Gemini')
+            .replace(/\bAi\b/gi, 'AI')
+            .replace(/Non-Ai/gi, 'Non-AI')
+            .replace(/Cb/g, 'CB')
+            .replace(/CB Plus/gi, 'CB PLUS')
+            .replace(/Pc/g, 'PC')
+            .replace(/Llm/g, 'LLM')
+            .replace(/\bTv\b/g, 'TV')
+            .replace(/\bYoutube\b/g, 'YouTube')
+            .replace(/\bWifi\b/g, 'Wi-Fi')
+            .replace(/Geforce Now/gi, 'GeForce NOW')
+            .replace(/Chromeos/gi, 'ChromeOS')
+            .replace(/Chrome Os/gi, 'ChromeOS')
+            .replace(/Notebooklm/gi, 'NotebookLM')
+            .replace(/Imagen/gi, 'Nano Banana');
+          return formatted;
+        };
+
+        const cleanDescription = (str) => {
+          let cleaned = str.replace(/\r?\n|\r/g, ' ').replace(/\s+/g, ' ').trim();
+          cleaned = cleaned.replace(/\bai\b/gi, 'AI');
+          cleaned = cleaned.replace(/Geforce Now/gi, 'GeForce NOW');
+          cleaned = cleaned.replace(/Chromeos/gi, 'ChromeOS');
+          cleaned = cleaned.replace(/Chrome Os/gi, 'ChromeOS');
+          cleaned = cleaned.replace(/Notebooklm/gi, 'NotebookLM');
+          cleaned = cleaned.replace(/Imagen/gi, 'Nano Banana');
+          if (cleaned.length > 0 && !cleaned.endsWith('.') && !cleaned.endsWith(')') && !cleaned.toLowerCase().includes('did you know series')) {
+            cleaned += '.';
+          }
+          return cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+        };
+
+        const detectTool = (title, desc) => {
+          const t = (title + ' ' + desc).toLowerCase();
+          const tools = [];
+          
+          if (t.includes('veo')) tools.push('Veo');
+          if (t.includes('extensions:')) tools.push('Extensions');
+          if (t.includes('canvas')) tools.push('Canvas');
+          if (t.includes('imagen') || t.includes('image generation') || t.includes('nano banana')) tools.push('Nano Banana');
+          if (t.includes('deep research')) tools.push('Deep Research');
+          
+          if (t.includes('help me write')) {
+            if (t.includes('quick insert')) tools.push('On-Device Google AI');
+            else tools.push('Help Me Write');
+          }
+          if (t.includes('help me read')) {
+            tools.push('On-Device Google AI');
+          }
+          
+          if (t.includes('agent')) tools.push('Agent');
+          if (t.includes('gem:') || t.includes('gem ') || t.includes('gems')) tools.push('Gems');
+          if (t.includes('notebooklm')) tools.push('NotebookLM');
+          if (t.includes('sidebar')) tools.push('Sidebar');
+
+          if (t.includes('lens') || t.includes('select to search')) {
+            if (t.includes('text capture') || t.includes('shopping')) tools.push('On-Device Google AI');
+            else tools.push('Google Lens');
+          }
+          if (t.includes('magic eraser') || t.includes('photos')) tools.push('Google Photos');
+          if (t.includes('google meet')) tools.push('Google Meet');
+          if (t.includes('slides') || t.includes('slide') || t.includes('presentation')) tools.push('Slides');
+          if ((t.includes('sheets') || t.includes('sheet') || t.includes('spreadsheet') || t.includes('budget')) && !t.includes('infosheet')) tools.push('Sheets');
+          if (t.includes('docs') || t.includes('doc') || t.includes('document')) {
+            if (!t.includes('infosheet')) tools.push('Docs');
+          }
+          if (t.includes('gmail') || t.includes('email')) tools.push('Gmail');
+          if (t.includes('calendar')) tools.push('Calendar');
+          if (t.includes('workspace')) tools.push('Google Workspace Tools');
+          
+          if (t.includes('translate')) {
+            if (t.includes('live translate')) tools.push('On-Device Google AI');
+            else tools.push('Google Workspace Tools');
+          }
+          if (t.includes('perks') || t.includes('perk')) tools.push('Perks');
+          if (t.includes('quick insert') || t.includes('smart tab grouping')) tools.push('On-Device Google AI');
+          if (t.includes('face control')) tools.push('On-Device Google AI');
+          
+          if (tools.length === 0 && t.includes('gemini')) {
+            tools.push('Gemini');
+          }
+          
+          return tools.length > 0 ? tools : ['Gemini'];
+        };
+
+        const parseStatusAndDate = (title) => {
+          const readyByRegex = /Ready by ([\d\/]+|TBD)/i;
+          const match = title.match(readyByRegex);
+          let cleanTitle = title.replace(readyByRegex, '').replace(/\n/g, '').replace(/\*/g, '').trim();
+          cleanTitle = cleanTitle.replace(/^"|"$/g, '');
+          
+          if (match) {
+            return {
+              cleanTitle: cleanTitle,
+              status: DemoStatus.IN_PRODUCTION,
+              date: match[1]
+            };
+          }
+          return {
+            cleanTitle: cleanTitle,
+            status: DemoStatus.LIVE
+          };
+        };
+
+        // --- 4. DATA AGGREGATION ---
+
+        const CHATBOT_DEMOS = rawChatbotData.map((item, index) => {
+          const { cleanTitle, status, date } = parseStatusAndDate(item.t);
+          let profile = item.p.replace(/^"|"$/g, '').replace(/\n/g, ' & ');
+          if (profile === 'Family') profile = 'Family (Shared Device)';
+          const isValidUrl = item.l && (item.l.startsWith('http') || item.l.startsWith('www'));
+          
+          let finalStatus = status;
+          let finalDate = date;
+          
+          if (isValidUrl) {
+            finalStatus = DemoStatus.LIVE;
+            finalDate = undefined;
+          } else {
+            finalStatus = DemoStatus.IN_PRODUCTION;
+            if (!finalDate) finalDate = 'TBD';
+          }
+          
+          // --- SPECIALIZED CHATBOT TOOL MAPPING ---
+          let tools = detectTool(cleanTitle, item.d);
+          
+          if (cleanTitle.toLowerCase().includes('server mapping')) {
+            tools = ['Gemini'];
+          } else {
+            tools = tools.map(tool => {
+              if (tool === 'Google Lens') return 'On-Device Google AI';
+              const workspaceApps = ['Sheets', 'Slides', 'Docs', 'Gmail', 'Calendar', 'Google Meet'];
+              if (workspaceApps.includes(tool)) return tool;
+              
+              if (['Help Me Read', 'Help Me Write', 'Quick Insert', 'Google Photos', 'Live Translate', 'Smart Tab Grouping'].includes(tool)) {
+                return 'On-Device Google AI';
+              }
+              return tool;
+            });
+          }
+          
+          let finalTools = Array.from(new Set(tools));
+          
+          const hasSpecificApp = finalTools.some(t => ['Sheets', 'Slides', 'Docs', 'Gmail', 'Calendar', 'Google Meet'].includes(t));
+          if (hasSpecificApp) {
+            finalTools = finalTools.filter(t => t !== 'Google Workspace Tools');
+          }
+
+          if (finalTools.includes('Gemini') && finalTools.includes('On-Device Google AI')) {
+            finalTools = finalTools.filter(t => t !== 'Gemini');
+          }
+
+          return {
+            id: `cb-${cleanTitle.toLowerCase().replace(/[^a-z0-9]/g, '-')}`,
+            title: toTitleCase(cleanTitle),
+            description: cleanDescription(item.d),
+            url: isValidUrl ? item.l : '#', 
+            source: DemoSource.CHATBOT_PROJECT,
+            status: finalStatus,
+            readyByDate: finalDate,
+            useCase: item.tags ? item.tags.split(',')[0].trim() : 'General',
+            tags: item.tags ? item.tags.split(',').map(tag => tag.trim()).filter(Boolean) : [],
+            profile: profile,
+            type: item.type || DemoType.GIF, 
+            iconType: item.type || DemoType.GIF,
+            toolsUsed: finalTools,
+            featured: false,
+          };
+        }).sort((a, b) => {
+          if (a.status === DemoStatus.LIVE && b.status !== DemoStatus.LIVE) return -1;
+          if (a.status !== DemoStatus.LIVE && b.status === DemoStatus.LIVE) return 1;
+          return 0;
+        });
+
+        const AI_EXPERIENCE_DEMOS = [];
+
+        const DYK_SERIES_DEMOS = [];
+
+        const EVENT_DEMOS = [];
+
+        const MARKETING_DEMOS = [];
+
+        const OFFICIAL_SOURCES_DATA = [
+          {
+            id: 'off-6',
+            title: 'Chromebook vs Neo Comparison Guide (USD)',
+            description: 'A comprehensive guide comparing Chromebook capabilities with the Neo competitor model (US Version).',
+            url: 'https://drive.google.com/file/d/1KkkQSN5I7oGPJeO-MTxpr0OKQK_LbC7G/view?usp=sharing',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Competition',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Competition'],
+            tags: ['competition', 'compete', 'macbook', 'neo', 'apple'],
+          },
+          {
+            id: 'off-6-cad',
+            title: 'Chromebook vs Neo Comparison Guide (CAD)',
+            description: 'A comprehensive guide comparing Chromebook capabilities with the Neo competitor model (Canada).',
+            url: 'https://drive.google.com/file/d/1Rx7Gk6e1KKlMu9iIZG_HeT7nKfrswJRW/view?usp=sharing&resourcekey=0-MhQXfNFVUkEu27Ya5j525w',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Competition',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Competition'],
+            tags: ['competition', 'compete', 'macbook', 'neo', 'apple'],
+          },
+          {
+            id: 'off-7',
+            title: 'Chromebook Standard Portfolio Guide',
+            description: 'Detailed overview of the standard Chromebook device portfolio.',
+            url: 'https://drive.google.com/file/d/1lDLIop1wrP-cPIc8mTTM19d5SQeJEKuU/view?usp=sharing',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Device Portfolio',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Device Portfolio'],
+            tags: ['portfolio', 'standard', 'hardware'],
+          },
+          {
+            id: 'off-8',
+            title: 'Chromebook Plus Portfolio Guide',
+            description: 'Detailed overview of the high-performance Chromebook Plus device portfolio.',
+            url: 'https://drive.google.com/file/d/1M4FIKGyRm0vak6ie-16ndb5E28MKd1/view?usp=sharing',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Device Portfolio',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Device Portfolio', 'CB Plus'],
+            tags: ['portfolio', 'plus', 'hardware', 'advantage'],
+          },
+          {
+            id: 'off-9',
+            title: 'Google AI Pro Perk (USD)',
+            description: 'Learn about the exclusive perks and offers available to Chromebook users.',
+            url: 'https://drive.google.com/file/d/1xdTWgnnK0kc_eBnZ777Kd3Lnu13EZYD5/view?usp=drive_link',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Basics of ChromeOS',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Perks'],
+            tags: ['perks', 'google ai pro', 'US', 'basics', '5TB', 'value', 'offers', 'extras'],
+          },
+          {
+            id: 'off-10',
+            title: 'Chromebook Plus Comparison Chart',
+            description: 'A detailed comparison chart for Chromebook Plus devices.',
+            url: 'https://drive.google.com/file/d/1_B7d190WjWSxDW94BqSJ-2LG3GkAo3Ws/view?usp=drive_link',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Basics of ChromeOS',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Basics of ChromeOS'],
+            tags: ['comparison', 'chart', 'plus', 'standard', 'hardware'],
+          },
+          {
+            id: 'off-11',
+            title: 'Help Me Read',
+            description: 'Demo of the AI-powered Help Me Read feature on Chromebook.',
+            url: 'https://drive.google.com/file/d/1qWzVWtDZyD4sDgjR4E5DWO7zo4zjIlug/view?usp=sharing&resourcekey=0-9Xg0ydi-qsC8uxZMoPoWQQ',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'On-Device Google AI',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['On-Device Google AI'],
+            tags: ['help me read', 'google ai', 'summarize', 'simplify'],
+          },
+          {
+            id: 'off-12',
+            title: 'Quick Insert',
+            description: 'Demo showing how to use the Quick Insert key for AI-powered productivity.',
+            url: 'https://drive.google.com/file/d/1ilxG0_o0Ft_dDSQ5Q9a6zyo9QNzFqtQG/view?usp=drive_link',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'On-Device Google AI',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['On-Device Google AI'],
+            tags: ['quick insert', 'google ai', 'key', 'hardware', 'keyboard'],
+          },
+          {
+            id: 'off-13',
+            title: 'Live Translate',
+            description: 'Demo of real-time Live Translate capabilities on Chromebook.',
+            url: 'https://drive.google.com/file/d/1sQj8fw6lttuwIaUqFd0iSSlL0sZunb5r/view?usp=sharing',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'On-Device Google AI',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['On-Device Google AI'],
+            tags: ['live translate', 'translation', 'google ai', 'on-screen', 'language'],
+          },
+          {
+            id: 'off-14',
+            title: 'Select to Search with Lens',
+            description: 'How to use Google Lens on Chromebook to select and search anything on your screen.',
+            url: 'https://drive.google.com/file/d/1dxvAGtpvfwzWHilREchrvMF_vn5qP4IP/view?usp=drive_link',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'On-Device Google AI',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['On-Device Google AI'],
+            tags: ['google lens', 'search', 'chrome', 'chromeOS', 'results'],
+          },
+          {
+            id: 'off-16',
+            title: 'Help Me Write',
+            description: 'Demo of the AI-powered Help Me Write feature on Chromebook.',
+            url: 'https://drive.google.com/file/d/10S-J8RrlfBT5LOEqXw-kN-JtP9wZAsMO/view?usp=sharing&resourcekey=0-MSbneKA1iAhh57Hcuw-vVg',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'On-Device Google AI',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['On-Device Google AI'],
+            tags: ['help me write', 'google ai', 'quick insert', 'prompt', 'draft'],
+          },
+          {
+            id: 'off-15',
+            title: 'Google AI Pro Perk (CAD)',
+            description: 'Learn about the exclusive perks and offers available to Chromebook users.',
+            url: 'https://drive.google.com/file/d/1ZZqW3Gjcj9qZ6LJSd8s7cDd0wt0pjwvU/view?usp=drive_link',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Perks',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Perks'],
+            tags: ['perks', 'google ai pro', 'canada', 'basics', '5TB', 'value', 'offers', 'extras'],
+          }
+        ];
+
+
+        const DEMO_DATA = [
+          ...CHATBOT_DEMOS,
+          ...AI_EXPERIENCE_DEMOS,
+          ...DYK_SERIES_DEMOS,
+          ...EVENT_DEMOS,
+          ...MARKETING_DEMOS,
+          ...OFFICIAL_SOURCES_DATA
+        ];
+
+        // --- 5. COMPONENTS ---
+
+        const LibraryTableHeader = ({ hideColumns }) => (
+          <div className="flex items-center gap-4 px-3 py-2 text-xs font-semibold text-gray-500 uppercase tracking-wider bg-[#1E1F20] border-b border-gray-800 mb-2">
+            <div className="w-10 text-center">Type</div>
+            <div className="flex-1">Resource Details</div>
+            <div className="hidden md:flex items-center gap-4 w-96">
+              {!hideColumns && (
+                <>
+                  <div className="w-32">Profile</div>
+                  <div className="w-32">Use Case</div>
+                </>
+              )}
+              <div className="flex-1 text-right">Tools</div>
+            </div>
+            <div className="w-10 text-right">Link</div>
+          </div>
+        );
+
+        const CompactRow = ({ item, index }) => {
+          const isProduction = item.status === DemoStatus.IN_PRODUCTION;
+          const isMarketing = item.source === DemoSource.MARKETING;
+
+          // Special logic for Chromebook Plus
+          const isCBPlus = item.title.includes('CB PLUS') || (item.tags && item.tags.some(t => t.toLowerCase() === 'cb plus'));
+          const displayTitle = item.title.replace('CB PLUS', '').trim();
+
+          return (
+            <div className={`relative group flex items-center gap-4 p-3 rounded-xl google-gradient-border transition-all hover:bg-[#1E1F20]/50 ${isMarketing ? 'opacity-70 hover:opacity-100' : ''}`}>
+              <div className="flex-shrink-0 w-10 flex justify-center" title={item.type}>
+                {getTypeIcon(item.iconType || item.type)}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1 flex-wrap">
+                  <h3 className={`text-sm font-medium truncate ${isProduction ? 'text-gray-400' : 'text-gray-200'}`} title={item.title}>
+                    {displayTitle}
+                    {isCBPlus && (
+                      <span className="ml-2 inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-bold bg-google-blue/20 text-google-blue border border-google-blue/30 whitespace-nowrap">
+                        CB PLUS
+                      </span>
+                    )}
+                  </h3>
+                  {item.featured && <Sparkles className="w-3 h-3 text-google-yellow" />}
+                  {isProduction && (
+                    <span className="text-[10px] text-orange-500 flex items-center gap-1 bg-orange-950/30 px-1.5 py-0.5 rounded font-mono">
+                      <Clock className="w-3 h-3" /> {item.readyByDate}
+                    </span>
+                  )}
+                </div>
+                <div className="w-full">
+                   <p className="text-[11px] text-gray-500 line-clamp-2 leading-relaxed" title={item.description}>
+                     {item.description}
+                   </p>
+                </div>
+                {item.tags && item.tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-2">
+                    {item.tags.map(tag => (
+                      <span key={tag} className="text-[10px] text-google-blue px-2 py-0.5 bg-google-blue/10 rounded border border-google-blue/20">
+                        #{tag}
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              <div className="w-10 flex justify-end">
+                {isProduction ? (
+                  <div className="w-8 h-8 flex items-center justify-center rounded text-gray-600 cursor-not-allowed" title="In Production">
+                    <AlertCircle className="w-4 h-4" />
+                  </div>
+                ) : (
+                  <a 
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-white/10 text-gray-400 hover:text-white transition-all transform hover:scale-110 active:scale-95"
+                    title="Open Resource"
+                  >
+                    <ExternalLink className="w-4 h-4" />
+                  </a>
+                )}
+              </div>
+            </div>
+          );
+        };
+
+        const SectionHeader = ({ title, count, colorClass, isOpen, onToggle }) => (
+          <div 
+            onClick={onToggle}
+            className="flex items-center gap-3 px-4 py-3 bg-[#1E1F20] border-y border-gray-800 sticky top-0 z-10 cursor-pointer hover:bg-[#252627] transition-colors select-none group"
+          >
+            {isOpen ? <ChevronDown className="w-4 h-4 text-gray-500" /> : <ChevronRight className="w-4 h-4 text-gray-500" />}
+            <h2 className={`text-[11px] font-bold uppercase tracking-widest ${colorClass}`}>{title}</h2>
+            
+            <div className="relative group-hover:bg-gray-700 transition-colors rounded-full ml-auto">
+                <span className="text-[10px] bg-gray-800 text-gray-400 px-2 py-0.5 rounded-full relative z-10 font-mono">Assets ({count})</span>
+            </div>
+          </div>
+        );
+
+        const LibraryView = ({ initialSearch = "", initialExpandedSection = null }) => {
+          const [search, setSearch] = useState(initialSearch);
+          const [selectedProfile, setSelectedProfile] = useState('All');
+          const [selectedType, setSelectedType] = useState('All');
+          const [selectedTool, setSelectedTool] = useState('All');
+          
+          const categories = [
+            'Basics of ChromeOS',
+            'Device Portfolio',
+            'Gemini',
+            'Google Ecosystem'
+          ];
+
+          const [sectionsOpen, setSectionsOpen] = useState(
+            categories.reduce((acc, cat) => ({ ...acc, [cat]: initialExpandedSection === cat || initialSearch !== "" }), {})
+          );
+
+          const [subSectionsOpen, setSubSectionsOpen] = useState({});
+
+          const [tagOverrides, setTagOverrides] = useState(() => {
+            try {
+              const saved = localStorage.getItem('chromebook_tag_overrides');
+              return saved ? JSON.parse(saved) : {};
+            } catch (e) {
+              return {};
+            }
+          });
+
+          const mergedData = useMemo(() => {
+            const base = [
+              ...CHATBOT_DEMOS,
+              ...AI_EXPERIENCE_DEMOS,
+              ...DYK_SERIES_DEMOS,
+              ...EVENT_DEMOS,
+              ...MARKETING_DEMOS,
+              ...OFFICIAL_SOURCES_DATA
+            ];
+            return base.map(item => ({
+              ...item,
+              tags: tagOverrides[item.id] !== undefined ? tagOverrides[item.id] : item.tags
+            }));
+          }, [tagOverrides]);
+
+          const filteredData = useMemo(() => {
+            const cleanSearch = search.toLowerCase().trim().startsWith('#') 
+              ? search.toLowerCase().trim().substring(1) 
+              : search.toLowerCase().trim();
+
+            return mergedData.filter(item => {
+              const tags = (item.tags || []).map(t => t.toLowerCase());
+              const tools = (item.toolsUsed || []).map(t => t.toLowerCase());
+              const matchesSearch = 
+                item.title.toLowerCase().includes(cleanSearch) || 
+                item.description.toLowerCase().includes(cleanSearch) ||
+                tools.some(t => t.includes(cleanSearch)) ||
+                tags.some(tag => tag.includes(cleanSearch));
+
+              const matchesProfile = selectedProfile === 'All' || (item.profile && item.profile.toLowerCase().includes(selectedProfile.toLowerCase()));
+              const matchesType = selectedType === 'All' || item.type === selectedType;
+              const matchesTool = selectedTool === 'All' || (item.toolsUsed && item.toolsUsed.includes(selectedTool));
+
+              return matchesSearch && matchesProfile && matchesType && matchesTool;
+            });
+          }, [search, selectedProfile, selectedType, selectedTool, mergedData]);
+
+          const groupedData = useMemo(() => {
+            const groups = {};
+            categories.forEach(cat => {
+              groups[cat] = { demos: [], subGroups: {} };
+            });
+
+            const sorted = [...filteredData].sort((a, b) => {
+              const baseA = a.title.split(':')[0].trim().toLowerCase();
+              const baseB = b.title.split(':')[0].trim().toLowerCase();
+              if (baseA !== baseB) return baseA.localeCompare(baseB);
+              if (a.type === DemoType.INFOSHEET && b.type !== DemoType.INFOSHEET) return -1;
+              if (a.type !== DemoType.INFOSHEET && b.type === DemoType.INFOSHEET) return 1;
+              return a.title.localeCompare(b.title);
+            });
+
+              sorted.forEach(item => {
+                const tools = item.toolsUsed || [];
+                const title = item.title.toLowerCase();
+                const desc = item.description.toLowerCase();
+                const tags = (item.tags || []).map(t => t.toLowerCase());
+
+                const hasTag = (term) => tags.some(t => t.includes(term.toLowerCase()));
+                
+                // SPECIAL CASE: Gemini Prompting Guide always goes to Gemini Basics
+                if (title.includes('prompting guide')) {
+                  if (!groups['Gemini'].subGroups['Gemini Basics']) groups['Gemini'].subGroups['Gemini Basics'] = {items: []};
+                  groups['Gemini'].subGroups['Gemini Basics'].items.push(item);
+                  return;
+                }
+
+                // SPECIAL CASE: The Value of ChromeOS always goes to Chromebook Basics
+                if (title.includes('the value of chromeos')) {
+                  if (!groups['Basics of ChromeOS'].subGroups['Chromebook Basics']) groups['Basics of ChromeOS'].subGroups['Chromebook Basics'] = {items: []};
+                  groups['Basics of ChromeOS'].subGroups['Chromebook Basics'].items.push(item);
+                  return;
+                }
+
+                // Priority 0: Competition (Elevated priority)
+                if ((title.includes('competition') || title.includes('neo') || title.includes('comparison') || hasTag('competition') || hasTag('comparison') || hasTag('neo')) && !title.includes('plus comparison chart')) {
+                  if (!groups['Device Portfolio'].subGroups['Competition']) groups['Device Portfolio'].subGroups['Competition'] = {items: [], nested: {}};
+                  groups['Device Portfolio'].subGroups['Competition'].items.push(item);
+                  return;
+                }
+
+                // Priority 1: Perks
+                if (title.includes('perks') || tools.includes('Perks') || hasTag('perks')) {
+                  if (!groups['Basics of ChromeOS'].subGroups['Perks']) groups['Basics of ChromeOS'].subGroups['Perks'] = {items: []};
+                  groups['Basics of ChromeOS'].subGroups['Perks'].items.push(item);
+                  return;
+                }
+
+                // Priority 2: Device Portfolio & Hardware
+                const hardwareTerms = [/\bphone\b/i, /\bfast pair\b/i, /\bandroid\b/i, /\bsharing\b/i, /\binteroperability\b/i, /\btv\b/i, /\bwatch\b/i];
+                if ((title.includes('cb plus') || title.includes('plus') || hasTag('plus') || title.includes('aluminum') || desc.includes('aluminum') || title.includes('portfolio') || hasTag('portfolio') || hardwareTerms.some(term => term.test(title) || term.test(desc))) && !title.includes('plus comparison chart') && !title.includes('basics of chromebook elearning')) {
+                  
+                  if (title.includes('aluminum') || desc.includes('aluminum') || hasTag('aluminum')) {
+                    if (!groups['Device Portfolio'].subGroups['Aluminum']) groups['Device Portfolio'].subGroups['Aluminum'] = {items: []};
+                    groups['Device Portfolio'].subGroups['Aluminum'].items.push(item);
+                  } else if (title.includes('plus') || hasTag('plus')) {
+                    if (!groups['Device Portfolio'].subGroups['CB Plus']) groups['Device Portfolio'].subGroups['CB Plus'] = {items: []};
+                    groups['Device Portfolio'].subGroups['CB Plus'].items.push(item);
+                  } else if (hardwareTerms.some(term => term.test(title) || term.test(desc))) {
+                    if (!groups['Google Ecosystem'].subGroups['Hardware Interoperability']) groups['Google Ecosystem'].subGroups['Hardware Interoperability'] = {items: []};
+                     groups['Google Ecosystem'].subGroups['Hardware Interoperability'].items.push(item);
+                  } else {
+                    if (!groups['Device Portfolio'].subGroups['CB Standard']) groups['Device Portfolio'].subGroups['CB Standard'] = {items: []};
+                    groups['Device Portfolio'].subGroups['CB Standard'].items.push(item);
+                  }
+                  return;
+                }
+
+                // Priority 3: Specific Gemini Tools
+                const geminiToolsList = ['Agent', 'Gems', 'Veo', 'Nano Banana', 'Canvas', 'Extensions', 'Deep Research', 'Sidebar', 'NotebookLM'];
+                if ((tools.some(t => geminiToolsList.includes(t)) || tools.includes('NotebookLM') || geminiToolsList.some(gt => hasTag(gt.toLowerCase()))) && !title.includes('gemini on chromeos')) {
+                  if (!groups['Gemini'].subGroups['Gemini Tools']) groups['Gemini'].subGroups['Gemini Tools'] = {items: [], nested: {}};
+                  let specificTool = tools.find(t => geminiToolsList.includes(t)) || geminiToolsList.find(gt => hasTag(gt.toLowerCase())) || 'NotebookLM';
+                  if (specificTool === 'Veo' || specificTool === 'Nano Banana') specificTool = 'Nano Banana & Veo';
+                  
+                  if (specificTool) {
+                    if (!groups['Gemini'].subGroups['Gemini Tools'].nested[specificTool]) groups['Gemini'].subGroups['Gemini Tools'].nested[specificTool] = [];
+                    groups['Gemini'].subGroups['Gemini Tools'].nested[specificTool].push(item);
+                  } else {
+                    groups['Gemini'].subGroups['Gemini Tools'].items.push(item);
+                  }
+                  return;
+                }
+
+                // Priority 4: On-Device Google AI
+                if (tools.includes('On-Device Google AI')) {
+                  if (!groups['Basics of ChromeOS'].subGroups['On-Device Google AI']) groups['Basics of ChromeOS'].subGroups['On-Device Google AI'] = {items: []};
+                  groups['Basics of ChromeOS'].subGroups['On-Device Google AI'].items.push(item);
+                  return;
+                }
+
+                // Priority 5: Trust and Safety
+                const safetyTerms = ['safety', 'privacy', 'limit', 'support', 'trust', 'security'];
+                if (safetyTerms.some(term => title.includes(term) || desc.includes(term)) || hasTag('safety') || hasTag('security') || hasTag('trust')) {
+                  if (!groups['Gemini'].subGroups['Gemini Trust and Safety']) groups['Gemini'].subGroups['Gemini Trust and Safety'] = {items: []};
+                  groups['Gemini'].subGroups['Gemini Trust and Safety'].items.push(item);
+                  return;
+                }
+
+                // Priority 6: Basics (Chromebook Basics)
+                if ((title.includes('basics') || hasTag('basics') || title.includes('the value of chromeos') || title.includes('plus comparison chart') || title.includes('basics of chromebook elearning')) && !title.includes('gemini on chromeos')) {
+                  if (!groups['Basics of ChromeOS'].subGroups['Chromebook Basics']) groups['Basics of ChromeOS'].subGroups['Chromebook Basics'] = {items: []};
+                  groups['Basics of ChromeOS'].subGroups['Chromebook Basics'].items.push(item);
+                  return;
+                }
+
+                // Priority 7: Gemini Basics
+                if (title.includes('gemini') || desc.includes('gemini') || tools.includes('Gemini')) {
+                  if (!groups['Gemini'].subGroups['Gemini Basics']) groups['Gemini'].subGroups['Gemini Basics'] = {items: []};
+                  groups['Gemini'].subGroups['Gemini Basics'].items.push(item);
+                  return;
+                }
+
+                // Fallback: Ecosystem / Other
+                const workspaceApps = ['Sheets', 'Slides', 'Docs', 'Gmail', 'Calendar', 'Google Meet', 'Google Workspace Tools'];
+                if (tools.some(t => workspaceApps.includes(t))) {
+                  if (!groups['Google Ecosystem'].subGroups['Service Platforms']) groups['Google Ecosystem'].subGroups['Service Platforms'] = {items: []};
+                  groups['Google Ecosystem'].subGroups['Service Platforms'].items.push(item);
+                  return;
+                }
+                if (!groups['Basics of ChromeOS'].subGroups['Chromebook Basics']) groups['Basics of ChromeOS'].subGroups['Chromebook Basics'] = {items: []};
+                groups['Basics of ChromeOS'].subGroups['Chromebook Basics'].items.push(item);
+              });
+
+            return groups;
+          }, [filteredData]);
+
+          function catMatch(item, cat) {
+            const title = item.title.toLowerCase();
+            const tools = item.toolsUsed || [];
+            const tags = (item.tags || []).map(t => t.toLowerCase());
+            if (cat === 'Basics of ChromeOS') {
+              return tags.includes('basics') || tools.includes('On-Device Google AI') || tags.includes('perks') || (!tags.includes('portfolio') && !title.includes('gemini') && !tools.includes('Gemini') && !tools.some(t => ['Sheets', 'Slides', 'Docs', 'Gmail', 'Calendar', 'Google Meet'].includes(t)));
+            }
+            if (cat === 'Device Portfolio') return tags.includes('portfolio') || title.includes('portfolio') || tags.includes('competition') || title.includes('neo') || title.includes('plus');
+            if (cat === 'Gemini') return title.includes('gemini') || tools.includes('Gemini') || tools.some(t => ['Agent', 'Gems', 'Veo', 'Nano Banana', 'Canvas', 'Extensions', 'Deep Research'].includes(t));
+            if (cat === 'Google Ecosystem') return tools.some(t => ['Sheets', 'Slides', 'Docs', 'Gmail', 'Calendar', 'Google Meet', 'Google Workspace Tools'].includes(t)) || tags.includes('hardware');
+            return false;
+          }
+
+          const isSearching = search.length > 0;
+
+          return (
+            <div className="w-full">
+              {/* Search & Filters */}
+              <div className="sticky top-0 z-40 bg-[#131314]/95 backdrop-blur-sm pb-4 pt-4 px-4 border-b border-gray-800/50">
+                <div className="flex gap-4 mb-4">
+                  <div className="relative flex-1 group">
+                    <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-google-blue transition-colors" />
+                    <input
+                      type="text"
+                      className="block w-full pl-10 pr-4 py-2.5 bg-[#1E1F20] border border-gray-700/50 rounded-xl text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-google-blue focus:ring-2 focus:ring-google-blue/20 transition-all"
+                      placeholder="Search training resources..."
+                      value={search}
+                      onChange={(e) => setSearch(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="p-4 space-y-4">
+                {categories.map((cat, idx) => {
+                  const group = groupedData[cat];
+                  const demos = group.demos;
+                  const subGroupEntries = Object.entries(group.subGroups).sort(([a], [b]) => {
+                    if (cat === 'Device Portfolio') {
+                      const order = ['CB Standard', 'CB Plus', 'Aluminum', 'Competition'];
+                      return order.indexOf(a) - order.indexOf(b);
+                    }
+                    return a.localeCompare(b);
+                  });
+                  const totalCount = demos.length + subGroupEntries.reduce((acc, [_, sub]) => {
+                    return acc + sub.items.length + (sub.nested ? Object.values(sub.nested).reduce((a, l) => a + l.length, 0) : 0);
+                  }, 0);
+
+                  if (totalCount === 0 && !isSearching) return null;
+                  const isOpen = sectionsOpen[cat] || isSearching;
+
+                  return (
+                    <div key={cat} className="rounded-2xl overflow-hidden border border-gray-800/50 bg-[#18191A]/30">
+                      <SectionHeader 
+                        title={cat} 
+                        count={totalCount} 
+                        colorClass={['text-google-blue', 'text-google-red', 'text-google-yellow', 'text-google-green'][idx % 4]} 
+                        isOpen={isOpen}
+                        onToggle={() => setSectionsOpen(prev => ({...prev, [cat]: !prev[cat]}))}
+                      />
+                      {isOpen && (
+                        <div className="p-3 space-y-3">
+                          {demos.length > 0 && (
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                              {demos.map((item, i) => <CompactRow key={item.id} item={item} index={i} />)}
+                            </div>
+                          )}
+                          
+                          {subGroupEntries.map(([subCat, subData]) => {
+                            const isSubOpen = subSectionsOpen[subCat] || isSearching;
+                            const subCount = subData.items.length + (subData.nested ? Object.values(subData.nested).reduce((a, l) => a + l.length, 0) : 0);
+                            if (subCount === 0) return null;
+
+                            return (
+                              <div key={subCat} className="border border-gray-800/30 rounded-xl overflow-hidden bg-[#131314]/50">
+                                <div 
+                                  onClick={() => setSubSectionsOpen(prev => ({...prev, [subCat]: !prev[subCat]}))}
+                                  className="flex items-center gap-2 px-4 py-2.5 bg-[#1E1F20]/50 hover:bg-[#1E1F20] cursor-pointer transition-colors group"
+                                >
+                                  {isSubOpen ? <ChevronDown className="w-3 h-3 text-gray-600" /> : <ChevronRight className="w-3 h-3 text-gray-600" />}
+                                  <span className="text-[10px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-gray-300">{subCat}</span>
+                                  <span className="text-[9px] text-gray-700 ml-auto font-mono">({subCount})</span>
+                                </div>
+                                
+                                {isSubOpen && (
+                                  <div className="p-3 space-y-4">
+                                    {subData.items.length > 0 && (
+                                      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                        {subData.items.map((item, i) => <CompactRow key={item.id} item={item} index={i} />)}
+                                      </div>
+                                    )}
+                                    
+                                    {subData.nested && Object.entries(subData.nested).sort(([a], [b]) => a.localeCompare(b)).map(([nestedTitle, nestedItems]) => {
+                                      const isNestedOpen = subSectionsOpen[nestedTitle] || isSearching;
+                                      return (
+                                        <div key={nestedTitle} className="border border-gray-800/20 rounded-lg overflow-hidden bg-[#000]/10">
+                                          <div 
+                                            onClick={() => setSubSectionsOpen(prev => ({...prev, [nestedTitle]: !prev[nestedTitle]}))}
+                                            className="flex items-center gap-2 px-3 py-2 bg-[#1C1D1E] hover:bg-[#202122] cursor-pointer transition-colors group"
+                                          >
+                                            {isNestedOpen ? <ChevronDown className="w-2.5 h-2.5 text-gray-600" /> : <ChevronRight className="w-2.5 h-2.5 text-gray-600" />}
+                                            <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500 group-hover:text-gray-300">{nestedTitle}</span>
+                                            <span className="text-[8px] text-gray-700 ml-auto font-mono">({nestedItems.length})</span>
+                                          </div>
+                                          {isNestedOpen && (
+                                            <div className="p-2 grid grid-cols-1 md:grid-cols-2 gap-2 bg-[#0a0a0b]/40">
+                                              {nestedItems.map((item, i) => <CompactRow key={item.id} item={item} index={i} />)}
+                                            </div>
+                                          )}
+                                        </div>
+                                      );
+                                    })}
+                                  </div>
+                                )}
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+
+              {filteredData.length === 0 && (
+                <div className="text-center py-20 px-4">
+                  <Search className="w-12 h-12 text-gray-800 mx-auto mb-4 opacity-20" />
+                  <h3 className="text-gray-500 font-medium">No resources found matching your search.</h3>
+                </div>
+              )}
+            </div>
+          );
+        };
+
+        const App = () => {
+          useEffect(() => {
+            const loading = document.getElementById('loading');
+            if (loading) loading.style.display = 'none';
+          }, []);
+
+          return (
+            <div className="min-h-screen bg-[#131314] text-[#E8EAED] font-sans flex flex-col">
+              <main className="flex-grow">
+                  <LibraryView initialSearch="" initialExpandedSection={null} />
+              </main>
+            </div>
+          );
+        }
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
