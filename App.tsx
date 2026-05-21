@@ -450,6 +450,39 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       groups['Basics of ChromeOS'].subGroups['Chromebook Basics'].items.push(item);
     });
 
+    // Ensure "Learning with NotebookLM" is at the bottom of the "NotebookLM" list if it exists
+    if (groups['Gemini']?.subGroups['Gemini Tools']?.nested?.['NotebookLM']) {
+      const list = groups['Gemini'].subGroups['Gemini Tools'].nested['NotebookLM'];
+      const targets: typeof list = [];
+      const remaining: typeof list = [];
+      
+      list.forEach(item => {
+        if (item.title.toLowerCase().includes('learning with notebooklm')) {
+          targets.push(item);
+        } else {
+          remaining.push(item);
+        }
+      });
+      groups['Gemini'].subGroups['Gemini Tools'].nested['NotebookLM'] = [...remaining, ...targets];
+    }
+
+    // Ensure "Gemini Study Tips" and "Back to School with Gemini" are at the bottom of the "Gemini Basics" subcategory
+    if (groups['Gemini']?.subGroups['Gemini Basics']?.items) {
+      const list = groups['Gemini'].subGroups['Gemini Basics'].items;
+      const targets: typeof list = [];
+      const remaining: typeof list = [];
+      
+      list.forEach(item => {
+        const lowerTitle = item.title.toLowerCase();
+        if (lowerTitle.includes('gemini study tips') || lowerTitle.includes('back to school with gemini')) {
+          targets.push(item);
+        } else {
+          remaining.push(item);
+        }
+      });
+      groups['Gemini'].subGroups['Gemini Basics'].items = [...remaining, ...targets];
+    }
+
     return groups;
   }, [filteredData, categories]);
 

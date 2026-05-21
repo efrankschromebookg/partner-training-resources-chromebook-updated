@@ -217,7 +217,6 @@
           { t: "Gemini Sidebar in Chrome", l: "https://drive.google.com/file/d/1kH2RETW6jvtuFcdpcHUG5uaCATeQ5n-h/view?usp=sharing", d: "Demo showing the Gemini sidebar experience on Chromebook Plus.", tags: "gemini tools, sidebar, gemini in chrome, chrome browser, agent, agentic support", p: "General", type: DemoType.INFOSHEET },
           { t: "Basics of Chromebook eLearning", l: "https://drive.google.com/file/d/1vqxuEP86YfPGeYdyyCt9OmtfSfqvICeg/view?usp=sharing", d: "15 minute foundational eLearning for baseline Chromebook knowledge. Partners without an eLearning platform can view the module through the Articulate web player link: https://share.articulate.com/s7w053UVQ07i08mKhOGHHn", tags: "foundations, chromebook, chromebook plus, chromeOS, introduction", p: "General", type: DemoType.INTERACTIVE },
           { t: "The Value of ChromeOS", l: "https://drive.google.com/file/d/1l4U5fijAeRYGzms1h_ywAtjmBmx4Gg_u/view?usp=sharing", d: "A video overview highlighting the core value proposition and benefits of ChromeOS.", tags: "foundations, chromebook, chromeOS, perks, offers, value", p: "General", type: DemoType.VIDEO },
-          { t: "What's New with NotebookLM eModule (Spring '26)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view?usp=drive_link", d: "Interactive eLearning module covering the latest updates to NotebookLM.", tags: "notebooklm, learning, productivity, video, audio, overview, infographics, mind map, slide output, sources", p: "Internal", type: DemoType.INTERACTIVE },
           { t: "Google Brand Familiarity", l: "https://drive.google.com/file/d/1jrd8I0U0ZcjKSC37wHUCEMqYdv2UcOPn/view?usp=sharing", d: "A guide to understanding Google's brand ecosystem and workspace familiarity.", tags: "google workspace, youtube, gmail, photos, android, ecosystem, beto, better together", p: "General", type: DemoType.VIDEO },
           { t: "Better Together with Gemini", l: "https://drive.google.com/file/d/1gtjxJ-dFpJv0nZxqSob-G_mKsT5NE0dh/view?usp=sharing", d: "Explore hardware interoperability and how devices work better together with Gemini.", tags: "hardware, interoperability, gemini, better together, beto, ecosystem", p: "General", type: DemoType.INFOSHEET },
           { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK },
@@ -942,6 +941,39 @@
               }
               groups['Basics of ChromeOS'].subGroups['Chromebook Basics'].items.push(item);
             });
+
+            // Ensure "Learning with NotebookLM" is at the bottom of the "NotebookLM" list if it exists
+            if (groups['Gemini']?.subGroups['Gemini Tools']?.nested?.['NotebookLM']) {
+              const list = groups['Gemini'].subGroups['Gemini Tools'].nested['NotebookLM'];
+              const targets = [];
+              const remaining = [];
+              
+              list.forEach(item => {
+                if (item.title.toLowerCase().includes('learning with notebooklm')) {
+                  targets.push(item);
+                } else {
+                  remaining.push(item);
+                }
+              });
+              groups['Gemini'].subGroups['Gemini Tools'].nested['NotebookLM'] = [...remaining, ...targets];
+            }
+
+            // Ensure "Gemini Study Tips" and "Back to School with Gemini" are at the bottom of the "Gemini Basics" subcategory
+            if (groups['Gemini']?.subGroups['Gemini Basics']?.items) {
+              const list = groups['Gemini'].subGroups['Gemini Basics'].items;
+              const targets = [];
+              const remaining = [];
+              
+              list.forEach(item => {
+                const lowerTitle = item.title.toLowerCase();
+                if (lowerTitle.includes('gemini study tips') || lowerTitle.includes('back to school with gemini')) {
+                  targets.push(item);
+                } else {
+                  remaining.push(item);
+                }
+              });
+              groups['Gemini'].subGroups['Gemini Basics'].items = [...remaining, ...targets];
+            }
 
             return groups;
           }, [filteredData, categories]);
