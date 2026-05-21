@@ -23,6 +23,7 @@ const toTitleCase = (str: string) => {
     .replace(/Chromeos/gi, 'ChromeOS') // Fix ChromeOS casing
     .replace(/Chrome Os/gi, 'ChromeOS') // Fix Chrome OS to ChromeOS
     .replace(/Notebooklm/gi, 'NotebookLM') // Fix NotebookLM casing
+    .replace(/\bB2s\b/gi, 'B2S') // Fix B2S casing
     .replace(/Imagen/gi, 'Nano Banana'); // Rename Imagen to Nano Banana
 
   return formatted;
@@ -149,7 +150,10 @@ const rawChatbotData = [
   { t: "Basics of Chromebook eLearning", l: "https://drive.google.com/file/d/1vqxuEP86YfPGeYdyyCt9OmtfSfqvICeg/view?usp=sharing", d: "15 minute foundational eLearning for baseline Chromebook knowledge. Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/s7w053UVQ07i08mKhOGHn", tags: "foundations, chromebook, chromebook plus, chromeOS, introduction", p: "General", type: DemoType.INTERACTIVE },
   { t: "Google Brand Familiarity", l: "https://drive.google.com/file/d/1jrd8I0U0ZcjKSC37wHUCEMqYdv2UcOPn/view?usp=sharing", d: "A guide to understanding Google's brand ecosystem and workspace familiarity.", tags: "google workspace, youtube, gmail, photos, android, ecosystem, beto, better together", p: "General", type: DemoType.VIDEO },
   { t: "Better Together with Gemini", l: "https://drive.google.com/file/d/1gtjxJ-dFpJv0nZxqSob-G_mKsT5NE0dh/view?usp=sharing", d: "Explore hardware interoperability and how devices work better together with Gemini.", tags: "hardware, interoperability, gemini, better together, beto, ecosystem", p: "General", type: DemoType.INFOSHEET },
-  { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK }
+  { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK },
+  { t: "Back to School with Gemini: In-Store Demos (B2S 2026)", l: "https://drive.google.com/file/d/103BXHaTJ2ibpOCafj5XkUtmmvxsvUDR7/view?usp=sharing", d: "Back to School with Gemini in-store live product demo scenarios and presentation guide.", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI", p: "General", type: DemoType.INFOSHEET },
+  { t: "Gemini Study Tips (B2S 2026)", l: "https://drive.google.com/file/d/1ADEH38FYSXrZaNXKf7BX2-WOzxZVpQTm/view?usp=sharing", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/XuFSGPMpYGdQF8fTEOdAq", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI, Productivity", p: "General", type: DemoType.INTERACTIVE },
+  { t: "Learning with NotebookLM (B2S 2026)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, NotebookLM, Notebooks, New", p: "General", type: DemoType.INTERACTIVE }
 
 ];
 
