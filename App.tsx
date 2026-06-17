@@ -329,7 +329,7 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
         groups[cat].subGroups = { 
           'CB Standard': { items: [] }, 
           'CB Plus': { items: [] }, 
-          'Aluminum': { items: [] }, 
+          'Googlebook': { items: [] }, 
           'Competition': { items: [] } 
         };
       }
@@ -386,10 +386,10 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
 
       // Priority 2: Device Portfolio & Hardware
       const hardwareTerms = [/\bphone\b/i, /\bfast pair\b/i, /\bandroid\b/i, /\bsharing\b/i, /\binteroperability\b/i, /\btv\b/i, /\bwatch\b/i];
-      if ((title.includes('cb plus') || title.includes('plus') || hasTag('plus') || title.includes('aluminum') || desc.includes('aluminum') || title.includes('portfolio') || hasTag('portfolio') || hardwareTerms.some(term => term.test(title) || term.test(desc))) && !title.includes('comparison chart') && !title.includes('basics of chromebook elearning')) {
+      if ((title.includes('cb plus') || title.includes('plus') || hasTag('plus') || title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || title.includes('portfolio') || hasTag('portfolio') || hardwareTerms.some(term => term.test(title) || term.test(desc))) && !title.includes('comparison chart') && !title.includes('basics of chromebook elearning')) {
         
-        if (title.includes('aluminum') || desc.includes('aluminum')) {
-          groups['Device Portfolio'].subGroups['Aluminum'].items.push(item);
+        if (title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook')) {
+          groups['Device Portfolio'].subGroups['Googlebook'].items.push(item);
         } else if (title.includes('plus') || hasTag('plus')) {
           groups['Device Portfolio'].subGroups['CB Plus'].items.push(item);
         } else if (hardwareTerms.some(term => term.test(title) || term.test(desc))) {
@@ -496,7 +496,7 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
     'Hardware Interoperability': false,
     'CB Standard': false,
     'CB Plus': false,
-    'Aluminum': false
+    'Googlebook': false
   });
 
   const sectionColors = [
@@ -589,7 +589,7 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
           
           const subGroupEntries = Object.entries(subGroups).sort(([a], [b]) => {
             if (cat === 'Device Portfolio') {
-              const order = ['CB Standard', 'CB Plus', 'Aluminum', 'Competition'];
+              const order = ['CB Standard', 'CB Plus', 'Googlebook', 'Competition'];
               return order.indexOf(a) - order.indexOf(b);
             }
             return a.localeCompare(b);

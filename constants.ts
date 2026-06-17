@@ -152,7 +152,8 @@ const rawChatbotData = [
   { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK },
   { t: "Back to School with Gemini: In-Store Demos (B2S 2026)", l: "https://drive.google.com/file/d/103BXHaTJ2ibpOCafj5XkUtmmvxsvUDR7/view?usp=sharing", d: "Back to School with Gemini in-store live product demo scenarios and presentation guide.", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI", p: "General", type: DemoType.INFOSHEET },
   { t: "Gemini Study Tips (B2S 2026)", l: "https://drive.google.com/file/d/1ADEH38FYSXrZaNXKf7BX2-WOzxZVpQTm/view?usp=sharing", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/XuFSGPMpYGdQF8fTEOdAq", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI, Productivity", p: "General", type: DemoType.INTERACTIVE },
-  { t: "Learning with NotebookLM (B2S 2026)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, NotebookLM, Notebooks, New", p: "General", type: DemoType.INTERACTIVE }
+  { t: "Learning with NotebookLM (B2S 2026)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, NotebookLM, Notebooks, New", p: "General", type: DemoType.INTERACTIVE },
+  { t: "General Summary: Gemini Trust and Safety Guide", l: "https://docs.google.com/presentation/d/12TvLVwOsjlVnZmKMw--SQT5tjak8ffDIwI-sm5Uf2P4/edit?usp=sharing", d: "A comprehensive guide on Gemini trust, safety, and security policies.", tags: "Gemini, trust, safety, security, privacy, guidelines", p: "General", type: DemoType.DECK }
 
 ];
 
@@ -338,7 +339,7 @@ export const OFFICIAL_SOURCES_DATA: DemoItem[] = [
   },
   {
     id: 'off-10',
-    title: 'Chromebook Plus Comparison Chart',
+    title: 'Chromebook & Chromebook Plus Comparison Chart',
     description: 'A detailed comparison chart for Chromebook Plus devices.',
     url: 'https://drive.google.com/file/d/1_B7d190WjWSxDW94BqSJ-2LG3GkAo3Ws/view?usp=drive_link',
     source: DemoSource.OFFICIAL,
