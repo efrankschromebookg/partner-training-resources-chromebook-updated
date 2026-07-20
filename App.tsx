@@ -401,10 +401,10 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       }
 
       // Priority 3: Specific Gemini Tools
-      const geminiToolsList = ['Agent', 'Gems', 'Veo', 'Nano Banana', 'Canvas', 'Extensions', 'Deep Research', 'Sidebar', 'NotebookLM'];
-      if ((tools.some(t => geminiToolsList.includes(t)) || tools.includes('NotebookLM') || geminiToolsList.some(gt => hasTag(gt.toLowerCase()))) && !title.includes('gemini on chromeos')) {
+      const geminiToolsList = ['Agent', 'Gems', 'Veo', 'Nano Banana', 'Canvas', 'Extensions', 'Deep Research', 'Sidebar', 'Gemini Notebook'];
+      if ((tools.some(t => geminiToolsList.includes(t)) || tools.includes('Gemini Notebook') || geminiToolsList.some(gt => hasTag(gt.toLowerCase()))) && !title.includes('gemini on chromeos')) {
         if (!groups['Gemini'].subGroups['Gemini Tools'].nested) groups['Gemini'].subGroups['Gemini Tools'].nested = {};
-        let specificTool = tools.find(t => geminiToolsList.includes(t)) || geminiToolsList.find(gt => hasTag(gt.toLowerCase())) || 'NotebookLM';
+        let specificTool = tools.find(t => geminiToolsList.includes(t)) || geminiToolsList.find(gt => hasTag(gt.toLowerCase())) || 'Gemini Notebook';
         if (specificTool === 'Veo' || specificTool === 'Nano Banana') specificTool = 'Nano Banana & Veo';
         
         if (specificTool) {
@@ -450,20 +450,20 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       groups['Basics of ChromeOS'].subGroups['Chromebook Basics'].items.push(item);
     });
 
-    // Ensure "Learning with NotebookLM" is at the bottom of the "NotebookLM" list if it exists
-    if (groups['Gemini']?.subGroups['Gemini Tools']?.nested?.['NotebookLM']) {
-      const list = groups['Gemini'].subGroups['Gemini Tools'].nested['NotebookLM'];
+    // Ensure "Learning with Gemini Notebook" is at the bottom of the "Gemini Notebook" list if it exists
+    if (groups['Gemini']?.subGroups['Gemini Tools']?.nested?.['Gemini Notebook']) {
+      const list = groups['Gemini'].subGroups['Gemini Tools'].nested['Gemini Notebook'];
       const targets: typeof list = [];
       const remaining: typeof list = [];
       
       list.forEach(item => {
-        if (item.title.toLowerCase().includes('learning with notebooklm')) {
+        if (item.title.toLowerCase().includes('learning with gemini notebook')) {
           targets.push(item);
         } else {
           remaining.push(item);
         }
       });
-      groups['Gemini'].subGroups['Gemini Tools'].nested['NotebookLM'] = [...remaining, ...targets];
+      groups['Gemini'].subGroups['Gemini Tools'].nested['Gemini Notebook'] = [...remaining, ...targets];
     }
 
     // Ensure "Gemini Study Tips" and "Back to School with Gemini" are at the bottom of the "Gemini Basics" subcategory

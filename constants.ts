@@ -22,7 +22,8 @@ const toTitleCase = (str: string) => {
     .replace(/Geforce Now/gi, 'GeForce NOW') // Correct casing
     .replace(/Chromeos/gi, 'ChromeOS') // Fix ChromeOS casing
     .replace(/Chrome Os/gi, 'ChromeOS') // Fix Chrome OS to ChromeOS
-    .replace(/Notebooklm/gi, 'NotebookLM') // Fix NotebookLM casing
+    .replace(/Notebooklm/gi, 'Gemini Notebook') // Fix Gemini Notebook casing
+    .replace(/NotebookLM/gi, 'Gemini Notebook')
     .replace(/\bB2s\b/gi, 'B2S') // Fix B2S casing
     .replace(/Imagen/gi, 'Nano Banana'); // Rename Imagen to Nano Banana
 
@@ -36,7 +37,7 @@ const cleanDescription = (str: string) => {
   cleaned = cleaned.replace(/Geforce Now/gi, 'GeForce NOW');
   cleaned = cleaned.replace(/Chromeos/gi, 'ChromeOS');
   cleaned = cleaned.replace(/Chrome Os/gi, 'ChromeOS');
-  cleaned = cleaned.replace(/Notebooklm/gi, 'NotebookLM');
+  cleaned = cleaned.replace(/Notebooklm|NotebookLM/gi, 'Gemini Notebook');
   cleaned = cleaned.replace(/Imagen/gi, 'Nano Banana');
 
   if (cleaned.length > 0 && !cleaned.endsWith('.') && !cleaned.endsWith(')') && !cleaned.toLowerCase().includes('did you know series')) {
@@ -66,7 +67,7 @@ const detectTool = (title: string, desc: string): string[] => {
   // Specific detections for Agent and Gems
   if (t.includes('agent')) tools.push('Agent');
   if (t.includes('gem:') || t.includes('gem ') || t.includes('gems')) tools.push('Gems');
-  if (t.includes('notebooklm')) tools.push('NotebookLM');
+  if (t.includes('notebooklm') || t.includes('gemini notebook')) tools.push('Gemini Notebook');
   if (t.includes('sidebar')) tools.push('Sidebar');
 
   if (t.includes('lens') || t.includes('select to search')) {
@@ -141,8 +142,8 @@ const rawChatbotData = [
   { t: "Deep Research: Infosheet", l: "https://drive.google.com/file/d/14dOvx8J5hrrihvDZHUiML_1hbKJvJ2jm/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "deep research, learning, gemini", p: "Everyday user", type: DemoType.INFOSHEET },
   { t: "Canvas: Infosheet", l: "https://drive.google.com/file/d/18kMYciYx1bypGyHua24VtcKWSNGzHGS_/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini, canvas, design, visual", p: "Everyday user", type: DemoType.INFOSHEET },
   { t: "Deep Research & Canvas: Video", l: "https://drive.google.com/file/d/1BeVq48oxNmSSMV0UXlqYlBugrKRRc1-K/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini, canvas, design, visual, deep research, learning", p: "Everyday user", type: DemoType.VIDEO },
-  { t: "NotebookLM Audio & Video Overview: Video", l: "https://drive.google.com/file/d/19L5PWHON_pl5W7Fspvv3F2F95jiDHfmD/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "notebooklm, learning, productivity, video, audio, overview", p: "", type: DemoType.VIDEO },
-  { t: "NotebookLM Audio & Video Overview: Infosheet", l: "https://drive.google.com/file/d/1jU-ssm4VbZTDSqTo8y3YBwp4flxM-9Jt/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "notebooklm, learning, productivity, video, audio, overview", p: "", type: DemoType.INFOSHEET },
+  { t: "Gemini Notebook Audio & Video Overview: Video", l: "https://drive.google.com/file/d/19L5PWHON_pl5W7Fspvv3F2F95jiDHfmD/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini notebook, learning, productivity, video, audio, overview", p: "", type: DemoType.VIDEO },
+  { t: "Gemini Notebook Audio & Video Overview: Infosheet", l: "https://drive.google.com/file/d/1ZTB_JlpA_OMeY0v-Q0nU8cBNCm95tvX6/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini notebook, learning, productivity, video, audio, overview", p: "", type: DemoType.INFOSHEET },
   { t: "Gemini on ChromeOS: Infosheet", l: "https://drive.google.com/file/d/1qRIu0Md0LKw87Z_eZIw7oPprBbP3lPB7/view?usp=sharing", d: "Overview of Gemini features and integration on ChromeOS.", tags: "Gemini, foundation, introduction, demos, integration, Workspace tools", p: "General", type: DemoType.INFOSHEET },
   { t: "Gemini Sidebar in Chrome", l: "https://drive.google.com/file/d/1kH2RETW6jvtuFcdpcHUG5uaCATeQ5n-h/view?usp=sharing", d: "Demo showing the Gemini sidebar experience in the Chrome browser.", tags: "gemini tools, sidebar, gemini in chrome, chrome browser, agent, agentic support", p: "General", type: DemoType.INFOSHEET },
   { t: "The Value of ChromeOS", l: "https://drive.google.com/file/d/1l4U5fijAeRYGzms1h_ywAtjmBmx4Gg_u/view?usp=sharing", d: "A video overview highlighting the core value proposition and benefits of ChromeOS.", tags: "foundations, chromebook, chromeOS, perks, offers, value", p: "General", type: DemoType.VIDEO },
@@ -152,7 +153,7 @@ const rawChatbotData = [
   { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK },
   { t: "Back to School with Gemini: In-Store Demos (B2S 2026)", l: "https://drive.google.com/file/d/103BXHaTJ2ibpOCafj5XkUtmmvxsvUDR7/view?usp=sharing", d: "Back to School with Gemini in-store live product demo scenarios and presentation guide.", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI", p: "General", type: DemoType.INFOSHEET },
   { t: "Gemini Study Tips (B2S 2026)", l: "https://drive.google.com/file/d/1ADEH38FYSXrZaNXKf7BX2-WOzxZVpQTm/view?usp=sharing", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/XuFSGPMpYGdQF8fTEOdAq", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI, Productivity", p: "General", type: DemoType.INTERACTIVE },
-  { t: "Learning with NotebookLM (B2S 2026)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, NotebookLM, Notebooks, New", p: "General", type: DemoType.INTERACTIVE },
+  { t: "Learning with Gemini Notebook (B2S 2026)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, Gemini Notebook, Notebooks, New", p: "General", type: DemoType.INTERACTIVE },
   { t: "General Summary: Gemini Trust and Safety Guide", l: "https://docs.google.com/presentation/d/12TvLVwOsjlVnZmKMw--SQT5tjak8ffDIwI-sm5Uf2P4/edit?usp=sharing", d: "A comprehensive guide on Gemini trust, safety, and security policies.", tags: "Gemini, trust, safety, security, privacy, guidelines", p: "General", type: DemoType.DECK }
 
 ];
