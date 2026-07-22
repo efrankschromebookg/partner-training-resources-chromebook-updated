@@ -49,7 +49,7 @@ const cleanDescription = (str: string) => {
 const detectTool = (title: string, desc: string): string[] => {
   const t = (title + ' ' + desc).toLowerCase();
   const tools = [];
-  if (t.includes('veo')) tools.push('Veo');
+  if (t.includes('veo') || t.includes('omni')) tools.push('Omni');
   if (t.includes('extensions:')) tools.push('Extensions');
   if (t.includes('canvas')) tools.push('Canvas');
   // Map 'imagen' keywords to Nano Banana
@@ -137,8 +137,9 @@ const rawChatbotData = [
   { t: "Gemini Agent: Video", l: "https://drive.google.com/file/d/1Q3H1fWzvQkj2ZGsC2LkHAzZY_oTBd60p/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "agent, agentic support, gemini", p: "Everyday user", type: DemoType.VIDEO },
   { t: "Gemini Gems: Infosheet", l: "https://drive.google.com/file/d/1HgUO0ywQgTKGEv40ONPrNKiF12WGsi_h/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gems, custom gem, creation, gemini", p: "Everyday user", type: DemoType.INFOSHEET },
   { t: "Gemini Gems: Video", l: "https://drive.google.com/file/d/1s--Kiuqe9ErNNSwDth9JbIZxZmtS-H2j/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gems, custom gem, creation, gemini", p: "Everyday user", type: DemoType.VIDEO },
-  { t: "Nano Banana & Veo: Infosheet", l: "https://drive.google.com/file/d/17T41i7XDPxgmkGX8BV-ubtd28Pz5EMMt/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "nano banana, veo, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.INFOSHEET },
-  { t: "Nano Banana & Veo: Video", l: "https://drive.google.com/file/d/14uiuROn1Xsyz36CySa48e2_1dkK1sudW/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "nano banana, veo, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.VIDEO },
+  { t: "Omni Infosheet", l: "https://drive.google.com/file/d/1GtRcou5jZCxr6Jns_-EJBBd1hLj9cb21/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "omni, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.INFOSHEET },
+  { t: "Nano Banana Infosheet", l: "https://drive.google.com/file/d/1gco8B8647avu5l2q8YvwlKC82aiQNGfY/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "nano banana, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.INFOSHEET },
+  { t: "Nano Banana & Omni: Video", l: "https://drive.google.com/file/d/14uiuROn1Xsyz36CySa48e2_1dkK1sudW/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "nano banana, omni, gen AI, generative, image, video, design, creativity", p: "Everyday user", type: DemoType.VIDEO },
   { t: "Deep Research: Infosheet", l: "https://drive.google.com/file/d/14dOvx8J5hrrihvDZHUiML_1hbKJvJ2jm/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "deep research, learning, gemini", p: "Everyday user", type: DemoType.INFOSHEET },
   { t: "Canvas: Infosheet", l: "https://drive.google.com/file/d/18kMYciYx1bypGyHua24VtcKWSNGzHGS_/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini, canvas, design, visual", p: "Everyday user", type: DemoType.INFOSHEET },
   { t: "Deep Research & Canvas: Video", l: "https://drive.google.com/file/d/1BeVq48oxNmSSMV0UXlqYlBugrKRRc1-K/view?usp=drive_link", d: "Did You Know Series (2026)", tags: "gemini, canvas, design, visual, deep research, learning", p: "Everyday user", type: DemoType.VIDEO },
@@ -150,10 +151,10 @@ const rawChatbotData = [
   { t: "Basics of Chromebook eLearning", l: "https://drive.google.com/file/d/1vqxuEP86YfPGeYdyyCt9OmtfSfqvICeg/view?usp=sharing", d: "15 minute foundational eLearning for baseline Chromebook knowledge. Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/s7w053UVQ07i08mKhOGHn", tags: "foundations, chromebook, chromebook plus, chromeOS, introduction", p: "General", type: DemoType.INTERACTIVE },
   { t: "Google Brand Familiarity", l: "https://drive.google.com/file/d/1jrd8I0U0ZcjKSC37wHUCEMqYdv2UcOPn/view?usp=sharing", d: "A guide to understanding Google's brand ecosystem and workspace familiarity.", tags: "google workspace, youtube, gmail, photos, android, ecosystem, beto, better together", p: "General", type: DemoType.VIDEO },
   { t: "Better Together with Gemini", l: "https://drive.google.com/file/d/1gtjxJ-dFpJv0nZxqSob-G_mKsT5NE0dh/view?usp=sharing", d: "Explore hardware interoperability and how devices work better together with Gemini.", tags: "hardware, interoperability, gemini, better together, beto, ecosystem", p: "General", type: DemoType.INFOSHEET },
-  { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/1PdXqbPeZ-yYs6qm0_MdpAO7C2rq7pU3MKBw-VVxdloY/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, veo, gen AI", p: "General", type: DemoType.DECK },
-  { t: "Back to School with Gemini: In-Store Demos (B2S 2026)", l: "https://drive.google.com/file/d/103BXHaTJ2ibpOCafj5XkUtmmvxsvUDR7/view?usp=sharing", d: "Back to School with Gemini in-store live product demo scenarios and presentation guide.", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI", p: "General", type: DemoType.INFOSHEET },
-  { t: "Gemini Study Tips (B2S 2026)", l: "https://drive.google.com/file/d/1ADEH38FYSXrZaNXKf7BX2-WOzxZVpQTm/view?usp=sharing", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/XuFSGPMpYGdQF8fTEOdAq", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI, Productivity", p: "General", type: DemoType.INTERACTIVE },
-  { t: "Learning with Gemini Notebook (B2S 2026)", l: "https://drive.google.com/file/d/1fjyvN1kZMD-wXbZ80Tbn__sMp6eluGWa/view", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, Gemini Notebook, Notebooks, New", p: "General", type: DemoType.INTERACTIVE },
+  { t: "Gemini Prompting Guide: Demos", l: "https://docs.google.com/presentation/d/17UACptOsySwB8YxZN8V5NqCbLd8cJukiEV15A1z_Iyc/edit?usp=sharing", d: "A comprehensive slide deck covering Gemini prompting techniques and live demo scenarios.", tags: "Gemini, prompting, canvas, deep research, storybook, guided learning, gems, image, video, generation, nano banana, omni, gen AI", p: "General", type: DemoType.DECK },
+  { t: "Back to School with Gemini: In-Store Demos (B2S 2026)", l: "https://drive.google.com/file/d/1ZmBmZQx8c1Agr0ZTFCpU_eiynhuCBAJS/view?usp=drive_link", d: "Back to School with Gemini in-store live product demo scenarios and presentation guide.", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI", p: "General", type: DemoType.INFOSHEET },
+  { t: "Gemini Study Tips (B2S 2026)", l: "https://drive.google.com/file/d/1cPO4VhhppV7Z5nwlhUm_vPM_JMY-q2KM/view?usp=drive_link", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/XuFSGPMpYGdQF8fTEOdAq", tags: "B2S, Back to School, EDU, Classroom, Students, Study, Google AI, Productivity", p: "General", type: DemoType.INTERACTIVE },
+  { t: "Learning with Gemini Notebook (B2S 2026)", l: "https://drive.google.com/file/d/1Dm_7y8pa2OnTCtZbj3aEyox2Z-li5B4S/view?usp=drive_link", d: "Partners without an eLearning platform can view the module through the Articulate web player link here: https://share.articulate.com/efQ7VBllQjLyHA19mDX_0", tags: "B2S, Back to School, EDU, Classroom, Students, Productivity, Gemini Notebook, Notebooks, New", p: "General", type: DemoType.INTERACTIVE },
   { t: "General Summary: Gemini Trust and Safety Guide", l: "https://docs.google.com/presentation/d/12TvLVwOsjlVnZmKMw--SQT5tjak8ffDIwI-sm5Uf2P4/edit?usp=sharing", d: "A comprehensive guide on Gemini trust, safety, and security policies.", tags: "Gemini, trust, safety, security, privacy, guidelines", p: "General", type: DemoType.DECK }
 
 ];
@@ -277,7 +278,7 @@ export const OFFICIAL_SOURCES_DATA: DemoItem[] = [
     id: 'off-6',
     title: 'Chromebook vs Neo Comparison Guide (USD)',
     description: 'A comprehensive guide comparing Chromebook capabilities with the Neo competitor model (US Version).',
-    url: 'https://drive.google.com/file/d/1xb1bvTumQGC3AiwsBgmiCz_OrfPo7R3s/view?usp=sharing',
+    url: 'https://drive.google.com/file/d/1in7GJXVq7PhPi3tjqXw6VZCO7YWmmf2E/view?usp=drive_link',
     source: DemoSource.OFFICIAL,
     status: DemoStatus.LIVE,
     useCase: 'Competition',
@@ -290,7 +291,7 @@ export const OFFICIAL_SOURCES_DATA: DemoItem[] = [
     id: 'off-6-cad',
     title: 'Chromebook vs Neo Comparison Guide (CAD)',
     description: 'A comprehensive guide comparing Chromebook capabilities with the Neo competitor model (Canada).',
-    url: 'https://drive.google.com/file/d/1Rx7Gk6e1KKlMu9iIZG_HeT7nKfrswJRW/view?usp=sharing&resourcekey=0-MhQXfNFVUkEu27Ya5j525w',
+    url: 'https://drive.google.com/file/d/1VM0miS1Jd3zbVWwHK85XABPZ0oHMHs5c/view?usp=sharing',
     source: DemoSource.OFFICIAL,
     status: DemoStatus.LIVE,
     useCase: 'Competition',
@@ -456,9 +457,9 @@ export const AI_TOOLS_DATA: ToolReference[] = [
     learnMoreUrl: 'https://blog.google/technology/developers/gemini-3-developers/'
   },
   {
-    id: 'tool-veo',
-    name: 'Veo 3.1',
-    description: 'Rolling out Veo 3.1 updates and integrating more advanced capabilities in Flow.',
+    id: 'tool-omni',
+    name: 'Omni 3.1',
+    description: 'Rolling out Omni 3.1 updates and integrating more advanced capabilities in Flow.',
     valueProp: 'Last official update: Oct 15th',
     iconName: 'Video',
     learnMoreUrl: 'https://blog.google/technology/ai/veo-updates-flow/'

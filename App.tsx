@@ -401,11 +401,11 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       }
 
       // Priority 3: Specific Gemini Tools
-      const geminiToolsList = ['Agent', 'Gems', 'Veo', 'Nano Banana', 'Canvas', 'Extensions', 'Deep Research', 'Sidebar', 'Gemini Notebook'];
+      const geminiToolsList = ['Agent', 'Gems', 'Omni', 'Nano Banana', 'Canvas', 'Extensions', 'Deep Research', 'Sidebar', 'Gemini Notebook'];
       if ((tools.some(t => geminiToolsList.includes(t)) || tools.includes('Gemini Notebook') || geminiToolsList.some(gt => hasTag(gt.toLowerCase()))) && !title.includes('gemini on chromeos')) {
         if (!groups['Gemini'].subGroups['Gemini Tools'].nested) groups['Gemini'].subGroups['Gemini Tools'].nested = {};
         let specificTool = tools.find(t => geminiToolsList.includes(t)) || geminiToolsList.find(gt => hasTag(gt.toLowerCase())) || 'Gemini Notebook';
-        if (specificTool === 'Veo' || specificTool === 'Nano Banana') specificTool = 'Nano Banana & Veo';
+        if (specificTool === 'Omni' || specificTool === 'Nano Banana') specificTool = 'Nano Banana & Omni';
         
         if (specificTool) {
           if (!groups['Gemini'].subGroups['Gemini Tools'].nested[specificTool]) groups['Gemini'].subGroups['Gemini Tools'].nested[specificTool] = [];
