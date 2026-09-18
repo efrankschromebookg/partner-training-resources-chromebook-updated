@@ -1,5 +1,6 @@
 {
-  "name": "Remix: Chromebook Training Resources Library",
-  "description": "A refined library of Chromebook training resources and AI demos, excluding obsolete content.",
-  "requestFramePermissions": []
+  "name": "Chromebook & Googlebook Training Resources Library",
+  "description": "A comprehensive library of Chromebook and Googlebook training resources, sales enablement guides, and Gemini AI demos.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

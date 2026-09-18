@@ -329,7 +329,7 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
         groups[cat].subGroups = { 
           'CB Standard': { items: [] }, 
           'CB Plus': { items: [] }, 
-          'Googlebook': { items: [] }, 
+          'Googlebook': { items: [], nested: { 'Googlebook SKUs': [] } }, 
           'Competition': { items: [] } 
         };
       }
@@ -388,8 +388,18 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       const hardwareTerms = [/\bphone\b/i, /\bfast pair\b/i, /\bandroid\b/i, /\bsharing\b/i, /\binteroperability\b/i, /\btv\b/i, /\bwatch\b/i];
       if ((title.includes('cb plus') || title.includes('plus') || hasTag('plus') || title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || title.includes('portfolio') || hasTag('portfolio') || hardwareTerms.some(term => term.test(title) || term.test(desc))) && !title.includes('comparison chart') && !title.includes('basics of chromebook elearning')) {
         
-        if (title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook')) {
-          groups['Device Portfolio'].subGroups['Googlebook'].items.push(item);
+        if (title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || tools.includes('Googlebook')) {
+          if (title.includes('sku') || hasTag('sku') || tools.includes('Googlebook SKUs') || ['lenovo', 'hp', 'dell', 'asus', 'acer'].some(b => title.includes(b))) {
+            if (!groups['Device Portfolio'].subGroups['Googlebook'].nested) {
+              groups['Device Portfolio'].subGroups['Googlebook'].nested = {};
+            }
+            if (!groups['Device Portfolio'].subGroups['Googlebook'].nested['Googlebook SKUs']) {
+              groups['Device Portfolio'].subGroups['Googlebook'].nested['Googlebook SKUs'] = [];
+            }
+            groups['Device Portfolio'].subGroups['Googlebook'].nested['Googlebook SKUs'].push(item);
+          } else {
+            groups['Device Portfolio'].subGroups['Googlebook'].items.push(item);
+          }
         } else if (title.includes('plus') || hasTag('plus')) {
           groups['Device Portfolio'].subGroups['CB Plus'].items.push(item);
         } else if (hardwareTerms.some(term => term.test(title) || term.test(desc))) {
@@ -483,10 +493,30 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       groups['Gemini'].subGroups['Gemini Basics'].items = [...remaining, ...targets];
     }
 
+    // Ensure exact sorting for Googlebook items: "Meet Googlebook", "Why Googlebook", "Make the Most of Everyday with Googlebook", "How to Sell Googlebook", "Sales Demo Guide", "Intro to Googlebook eLearning"
+    if (groups['Device Portfolio']?.subGroups['Googlebook']?.items) {
+      const gbOrder = ['meet googlebook', 'why googlebook', 'make the most of everyday', 'how to sell', 'sales demo guide', 'intro to googlebook'];
+      groups['Device Portfolio'].subGroups['Googlebook'].items.sort((a, b) => {
+        const aIdx = gbOrder.findIndex(k => a.title.toLowerCase().includes(k));
+        const bIdx = gbOrder.findIndex(k => b.title.toLowerCase().includes(k));
+        return (aIdx !== -1 ? aIdx : 99) - (bIdx !== -1 ? bIdx : 99);
+      });
+    }
+
+    // Ensure exact sorting for Googlebook SKUs: Lenovo, HP, Dell, ASUS, Acer
+    if (groups['Device Portfolio']?.subGroups['Googlebook']?.nested?.['Googlebook SKUs']) {
+      const skuOrder = ['lenovo', 'hp', 'dell', 'asus', 'acer'];
+      groups['Device Portfolio'].subGroups['Googlebook'].nested['Googlebook SKUs'].sort((a, b) => {
+        const aIdx = skuOrder.findIndex(k => a.title.toLowerCase().includes(k));
+        const bIdx = skuOrder.findIndex(k => b.title.toLowerCase().includes(k));
+        return (aIdx !== -1 ? aIdx : 99) - (bIdx !== -1 ? bIdx : 99);
+      });
+    }
+
     return groups;
   }, [filteredData, categories]);
 
-  const [subSectionsOpen, setSubSectionsOpen] = useState({
+  const [subSectionsOpen, setSubSectionsOpen] = useState<Record<string, boolean>>({
     'Chromebook Basics': false,
     'On-Device Google AI': false,
     'Gemini Basics': false,
@@ -496,7 +526,8 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
     'Hardware Interoperability': false,
     'CB Standard': false,
     'CB Plus': false,
-    'Googlebook': false
+    'Googlebook': false,
+    'Googlebook SKUs': false
   });
 
   const sectionColors = [
@@ -833,7 +864,7 @@ export default function App() {
             <div className="w-8 h-8 flex items-center justify-center">
                <img src="https://registry.npmmirror.com/@lobehub/icons-static-png/latest/files/dark/gemini-color.png" alt="Gemini Logo" className="w-8 h-8" />
             </div>
-            <span className="font-semibold text-white tracking-tight text-lg">Chromebook Training Resources Library</span>
+            <span className="font-semibold text-white tracking-tight text-lg">Chromebook & Googlebook Training Resources Library</span>
           </div>
 
           <div className="flex items-center gap-2">
