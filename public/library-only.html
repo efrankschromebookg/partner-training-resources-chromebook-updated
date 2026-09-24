@@ -708,6 +708,19 @@
             tags: ['Googlebook', 'SKU', 'Acer', 'Hardware', '14-inch', 'Gemini'],
           },
           {
+            id: 'off-sku-google-ai-pro',
+            title: 'Googlebook: Google AI Pro Offer',
+            description: 'Overview of the exclusive Google AI Pro offer and benefits available with Googlebook in the US and Canada.',
+            url: 'https://drive.google.com/file/d/1-5sfSjgr1cqtZakNqkENgUf5ynRfE5-K/view?usp=sharing',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Device Portfolio',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Googlebook', 'Googlebook SKUs', 'Device Portfolio'],
+            tags: ['Googlebook', 'Google AI Pro', 'Offer', 'US', 'CAN', 'Gemini'],
+          },
+          {
             id: 'off-sales-demo-guide',
             title: 'Sales Demo Guide',
             description: 'Comprehensive presentation deck covering retail sales positioning and live customer demonstration scenarios for Googlebook.',
@@ -1110,9 +1123,9 @@
                 });
               }
 
-              // Ensure exact sorting for Googlebook SKUs: Lenovo, HP, Dell, ASUS, Acer
+              // Ensure exact sorting for Googlebook SKUs: Lenovo, HP, Dell, ASUS, Acer, Offer
               if (groups['Device Portfolio']?.subGroups['Googlebook']?.nested?.['Googlebook SKUs']) {
-                const skuOrder = ['lenovo', 'hp', 'dell', 'asus', 'acer'];
+                const skuOrder = ['lenovo', 'hp', 'dell', 'asus', 'acer', 'offer', 'pro'];
                 groups['Device Portfolio'].subGroups['Googlebook'].nested['Googlebook SKUs'].sort((a, b) => {
                   const aIdx = skuOrder.findIndex(k => a.title.toLowerCase().includes(k));
                   const bIdx = skuOrder.findIndex(k => b.title.toLowerCase().includes(k));

@@ -513,9 +513,9 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       });
     }
 
-    // Ensure exact sorting for Googlebook SKUs: Lenovo, HP, Dell, ASUS, Acer
+    // Ensure exact sorting for Googlebook SKUs: Lenovo, HP, Dell, ASUS, Acer, Offer
     if (groups['Device Portfolio']?.subGroups['Googlebook']?.nested?.['Googlebook SKUs']) {
-      const skuOrder = ['lenovo', 'hp', 'dell', 'asus', 'acer'];
+      const skuOrder = ['lenovo', 'hp', 'dell', 'asus', 'acer', 'offer', 'pro'];
       groups['Device Portfolio'].subGroups['Googlebook'].nested['Googlebook SKUs'].sort((a, b) => {
         const aIdx = skuOrder.findIndex(k => a.title.toLowerCase().includes(k));
         const bIdx = skuOrder.findIndex(k => b.title.toLowerCase().includes(k));
