@@ -758,6 +758,19 @@
             type: DemoType.VIDEO,
             toolsUsed: ['Googlebook', 'Device Portfolio', 'Gemini'],
             tags: ['Googlebook', 'Gemini', 'Productivity', 'Creativity', 'Entertainment', 'Demos', 'Use Cases'],
+          },
+          {
+            id: 'off-logitech-accessories-googlebook',
+            title: 'Logitech Accessories for Googlebook',
+            description: 'Overview of Logitech mice and keyboards designed for Googlebook, featuring Fast Pair, Easy-Switch multi-device connectivity, Logi Options+ shortcut customization, and Gemini AI workflows.',
+            url: 'https://drive.google.com/file/d/1_zXhCmtPWu-tw4yS3P6SwNf3zQKR8AOn/view?usp=sharing',
+            source: DemoSource.OFFICIAL,
+            status: DemoStatus.LIVE,
+            useCase: 'Hardware Interoperability',
+            profile: 'General',
+            type: DemoType.INFOSHEET,
+            toolsUsed: ['Hardware Interoperability', 'Google Ecosystem', 'Logitech', 'Googlebook'],
+            tags: ['Logitech', 'Accessories', 'Googlebook', 'Hardware', 'Interoperability', 'Fast Pair', 'Easy-Switch', 'Peripherals', 'Gemini'],
           }
         ];
 
@@ -1002,7 +1015,10 @@
                 const hardwareTerms = [/\bphone\b/i, /\bfast pair\b/i, /\bandroid\b/i, /\bsharing\b/i, /\binteroperability\b/i, /\btv\b/i, /\bwatch\b/i];
                 if ((title.includes('cb plus') || title.includes('plus') || hasTag('plus') || title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || title.includes('portfolio') || hasTag('portfolio') || hardwareTerms.some(term => term.test(title) || term.test(desc))) && !title.includes('plus comparison chart') && !title.includes('basics of chromebook elearning')) {
                   
-                  if (title.includes('aluminum') || desc.includes('aluminum') || hasTag('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || hasTag('googlebook') || tools.includes('Googlebook')) {
+                  if (title.includes('logitech') || tools.includes('Hardware Interoperability') || item.useCase === 'Hardware Interoperability') {
+                    if (!groups['Google Ecosystem'].subGroups['Hardware Interoperability']) groups['Google Ecosystem'].subGroups['Hardware Interoperability'] = {items: []};
+                    groups['Google Ecosystem'].subGroups['Hardware Interoperability'].items.push(item);
+                  } else if (title.includes('aluminum') || desc.includes('aluminum') || hasTag('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || hasTag('googlebook') || tools.includes('Googlebook')) {
                     if (!groups['Device Portfolio'].subGroups['Googlebook']) groups['Device Portfolio'].subGroups['Googlebook'] = {items: [], nested: {'Googlebook SKUs': []}};
                     if (title.includes('sku') || hasTag('sku') || tools.includes('Googlebook SKUs') || ['lenovo', 'hp', 'dell', 'asus', 'acer'].some(b => title.includes(b))) {
                       if (!groups['Device Portfolio'].subGroups['Googlebook'].nested) groups['Device Portfolio'].subGroups['Googlebook'].nested = {};

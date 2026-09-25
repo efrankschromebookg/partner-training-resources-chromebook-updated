@@ -585,6 +585,19 @@ export const OFFICIAL_SOURCES_DATA: DemoItem[] = [
     type: DemoType.VIDEO,
     toolsUsed: ['Googlebook', 'Device Portfolio', 'Gemini'],
     tags: ['Googlebook', 'Gemini', 'Productivity', 'Creativity', 'Entertainment', 'Demos', 'Use Cases'],
+  },
+  {
+    id: 'off-logitech-accessories-googlebook',
+    title: 'Logitech Accessories for Googlebook',
+    description: 'Overview of Logitech mice and keyboards designed for Googlebook, featuring Fast Pair, Easy-Switch multi-device connectivity, Logi Options+ shortcut customization, and Gemini AI workflows.',
+    url: 'https://drive.google.com/file/d/1_zXhCmtPWu-tw4yS3P6SwNf3zQKR8AOn/view?usp=sharing',
+    source: DemoSource.OFFICIAL,
+    status: DemoStatus.LIVE,
+    useCase: 'Hardware Interoperability',
+    profile: 'General',
+    type: DemoType.INFOSHEET,
+    toolsUsed: ['Hardware Interoperability', 'Google Ecosystem', 'Logitech', 'Googlebook'],
+    tags: ['Logitech', 'Accessories', 'Googlebook', 'Hardware', 'Interoperability', 'Fast Pair', 'Easy-Switch', 'Peripherals', 'Gemini'],
   }
 
 ];

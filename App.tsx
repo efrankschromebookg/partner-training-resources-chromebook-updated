@@ -398,7 +398,10 @@ const LibraryView: React.FC<LibraryViewProps> = ({ isAdmin, initialSearch = '', 
       const hardwareTerms = [/\bphone\b/i, /\bfast pair\b/i, /\bandroid\b/i, /\bsharing\b/i, /\binteroperability\b/i, /\btv\b/i, /\bwatch\b/i];
       if ((title.includes('cb plus') || title.includes('plus') || hasTag('plus') || title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || title.includes('portfolio') || hasTag('portfolio') || hardwareTerms.some(term => term.test(title) || term.test(desc))) && !title.includes('comparison chart') && !title.includes('basics of chromebook elearning')) {
         
-        if (title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || tools.includes('Googlebook')) {
+        if (title.includes('logitech') || tools.includes('Hardware Interoperability') || item.useCase === 'Hardware Interoperability') {
+          if (!groups['Google Ecosystem'].subGroups['Hardware Interoperability']) groups['Google Ecosystem'].subGroups['Hardware Interoperability'] = {items: []};
+          groups['Google Ecosystem'].subGroups['Hardware Interoperability'].items.push(item);
+        } else if (title.includes('aluminum') || desc.includes('aluminum') || title.includes('googlebook') || desc.includes('googlebook') || tools.includes('Googlebook')) {
           if (title.includes('sku') || hasTag('sku') || tools.includes('Googlebook SKUs') || ['lenovo', 'hp', 'dell', 'asus', 'acer'].some(b => title.includes(b))) {
             if (!groups['Device Portfolio'].subGroups['Googlebook'].nested) {
               groups['Device Portfolio'].subGroups['Googlebook'].nested = {};
@@ -965,7 +968,7 @@ export default function App() {
       {/* Footer */}
       <footer className="border-t border-gray-800 mt-auto py-6 text-center" id="footer">
         <p className="text-sm text-white mb-2">
-          Please reach out to Emily Franks (<a href="mailto:frankse@google.com" className="text-google-blue hover:underline">frankse@</a>) for the exhaustive demo list or to request additional content or demos.
+          Please reach out to Emily Franks (<a href="mailto:frankse@google.com" className="text-google-blue hover:underline">frankse@</a>) to request additional content or demos.
         </p>
         <p className="text-xs text-gray-600">
           Internal Use Only • CrOS Training & Enablement • Confidential
